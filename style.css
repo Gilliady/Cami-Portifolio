@@ -1,0 +1,713 @@
+/* =========================================
+   DECLARAÇÃO DE FONTES LOCAIS
+========================================= */
+@font-face {
+    font-family: 'Palmore';
+    src: url('./OTF/Palmore.otf') format('opentype');
+    font-weight: normal; 
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PR Astro';
+    src: url('./OTF/ASTRO.ttf') format('truetype');
+    font-weight: normal; 
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Cabin';
+    src: url('./fonts/cabin/Cabin-Regular.ttf') format('truetype');
+    font-weight: 400; 
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Cabin-Bold';
+    src: url('./fonts/cabin/Cabin-Bold.ttf') format('truetype');
+    font-weight: 700; 
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Browallia New';
+    src: url('./fonts/Browallia New.ttf') format('truetype');
+    font-weight: 400; 
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Objective';
+    src: url('./fonts/Objective_OTF/Objective-Regular.otf') format('opentype');
+    font-weight: 400; 
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bubbleboddy';
+    src: url('./fonts/BubbleboddyNeue-Thin Trial.ttf') format('truetype');
+    font-weight: 200; 
+    font-style: normal;
+}
+
+/* =========================================
+   VARIÁVEIS E RESET
+========================================= */
+:root {
+    --bg-color: #232323;
+    --accent-color: #FFC300; 
+    --text-light: #FFF; 
+    --font-heading: 'Palmore', serif;
+    --font-body: 'Objective', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-light);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+p, span, input, textarea, label {
+    font-weight: 400;
+}
+
+[data-i18n] {
+    transition: opacity 0.3s ease;
+}
+
+[data-i18n].fade-out {
+    opacity: 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+}
+
+/* --- Tipografia Global --- */
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    font-weight: normal; 
+}
+
+/* =========================================
+   LAYOUT BASE (DESKTOP 1920px)
+========================================= */
+.container {
+    max-width: 1920px; 
+    margin: 0 auto;
+    padding: 0 5%;
+    position: relative; 
+}
+
+/* --- Header --- */
+header { padding: 2rem 5%; }
+.header-container { max-width: 1920px; margin: 0 auto; display: flex; justify-content: flex-start; }
+.lang-switch { display: flex; border: 1px solid var(--accent-color); border-radius: 20px; overflow: hidden; }
+.lang-switch span { padding: 6px 16px; font-size: 0.8rem; font-weight: 600; color: var(--accent-color); cursor: pointer; font-family: 'Cabin', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+.lang-switch span:not(.active):hover { background-color: rgba(255, 195, 0, 0.15); }
+.lang-switch span.active { background-color: var(--accent-color); color: var(--bg-color); }
+
+/* --- HERO SECTION --- */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 2rem;
+}
+
+.hero-text {
+    flex: 1;
+    max-width: 880px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-text .name {
+    width: auto;
+    font-family: 'Browallia New';
+    font-size: 36px;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.hero-text h1 {
+    font-family: 'Palmore';
+    font-size: 220px; 
+    color: var(--accent-color);
+    line-height: 0.75; 
+    margin-bottom: 4rem;
+    text-align: left;
+}
+
+.hero-subtitle p {
+    font-family: 'Browallia New';
+    font-size: 36px;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 100%;
+}
+
+.moons {
+    font-family: 'PR Astro';
+    font-size: 20px;
+    color: var(--accent-color);
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.hero-desc {
+    font-family: 'Browallia New';
+    font-size: 20px;
+    color: var(--accent-color);
+    text-align: center; 
+    max-width: 450px;
+    line-height: 1.1;
+}
+
+.hero-image {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hero-image img {
+    width: 694px;
+    height: 853px;
+    object-fit: cover;
+    border-radius: 20px 0 20px 20px; 
+    margin-top: -80px;
+}
+
+/* --- ABOUT SECTION --- */
+.about {
+    position: relative;
+    padding-top: 10rem;
+    display: flex;
+    justify-content: flex-end; 
+    margin-right: calc(50% - 50vw);
+}
+
+.about-container-right {
+    display: flex;
+    align-items: center; 
+    width: 1673px;
+    height: 918px;
+    max-width: 100%;
+}
+
+.about-text-container {
+    width: 636px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.outline-text {
+    font-family: 'Palmore';
+    font-size: 350px; 
+    color: transparent;
+    -webkit-text-stroke: 1px var(--accent-color);
+    line-height: 0.8;
+    margin-bottom: -2rem; 
+}
+
+.about .about-title {
+    width: 636px;
+    height: 256px;
+    font-size: 350px;
+    margin: 0;
+    margin-bottom: 56px;
+    text-align: left;
+    display: flex;
+    align-items: flex-end;
+}
+
+.about-text {
+    width: 636px;
+    height: 369px;
+    font-family: 'Objective';
+    font-size: 20px;
+    color: #FFF;
+    text-align: justify;
+    line-height: 1.5;
+}
+
+.about-image {
+    margin-left: 120px;
+    width: 691px;
+    height: 918px;
+}
+
+.about-image img {
+    width: 691px;
+    height: 918px;
+    object-fit: cover;
+    border-radius: 20px; 
+}
+
+/* --- STATS BOX LATERIAL --- */
+.stats-box {
+    margin-left: 46px;
+    width: 180px;
+    height: 792px;
+    background: var(--accent-color);
+    border-radius: 82px 0 0 82px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 3rem 0;
+    z-index: 10;
+}
+
+.stat-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Números grandes */
+.stat-number {
+    font-family: 'Cabin-Bold', sans-serif;
+    color: #000;
+    line-height: 1;
+    display: block;
+}
+.stat-number-lg { font-size: 75px; }
+.stat-number-md { font-size: 56px; }
+.stat-number-xl { font-size: 64px; }
+
+/* "years" — Cabin Regular 32px */
+.stat-label-word {
+    font-family: 'Cabin', sans-serif;
+    font-size: 32px;
+    color: #000;
+    line-height: 1;
+    display: block;
+}
+
+/* descrições — Bubbleboddy */
+.stat-label-desc {
+    font-family: 'Bubbleboddy', sans-serif;
+    font-size: 25px;
+    color: #000;
+    line-height: 1.2;
+    text-align: center;
+    display: block;
+}
+.stat-label-sm { font-size: 21px; }
+
+/* --- PROJECTS SECTION --- */
+.projects-section { padding-top: 15rem; }
+
+.projects-header {
+    display: flex;
+    align-items: center;
+    gap: 6rem;
+    margin-bottom: 4rem;
+}
+
+.projects-header .outline-text {
+    flex-shrink: 0;
+    font-size: 350px;
+    line-height: 0.8;
+    margin: 0;
+}
+
+.projects-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    font-family: 'Browalia New', sans-serif;
+    font-size: 22px;
+    color: #676767;
+    cursor: pointer;
+    text-align: left;
+    letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+    padding: 0;
+}
+
+.filter-btn:hover {
+    color: #FFC300;
+    opacity: 0.8;
+}
+
+.filter-btn.active {
+    color: #FFC300;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(150px, auto);
+    gap: 1.5rem;
+}
+
+.project-item {
+    overflow: hidden;
+    border-radius: 8px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.project-item.hidden {
+    display: none;
+}
+
+.project-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.project-item:hover img {
+    transform: scale(1.04);
+}
+
+.item-gun { grid-column: span 6; grid-row: span 2; }
+.item-hallway { grid-column: span 3; grid-row: span 3; }
+.item-graphic { grid-column: span 3; grid-row: span 3; }
+.item-lightis { grid-column: span 3; grid-row: span 2; }
+.item-sombras { grid-column: span 9; grid-row: span 2; }
+.item-eye { grid-column: span 6; grid-row: span 2; }
+.item-building { grid-column: span 3; grid-row: span 2; }
+.item-plate { grid-column: span 3; grid-row: span 2; }
+
+/* --- CONTACT SECTION --- */
+.contact-section {
+    padding-top: 12rem;
+    padding-bottom: 8rem;
+    display: flex;
+    gap: 6rem;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.contact-visual {
+    flex: 0 0 auto;
+    position: relative;
+}
+
+.contact-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 2;
+    margin-bottom: -3rem;
+}
+
+.solid-title {
+    font-family: 'Palmore';
+    font-size: 220px;
+    color: var(--accent-color);
+    line-height: 0.85;
+}
+
+.social-icons {
+    display: flex;
+    flex-direction: column;
+    padding-top: 3.8rem;
+    gap: 12px;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    /* border: 2px solid var(--accent-color); */
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    text-decoration: none;
+}
+
+.social-icon:hover {
+    background: var(--accent-color);
+}
+
+.social-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 0;
+    /* filter: brightness(0) invert(1); */
+}
+
+.social-icon:hover img {
+    filter: brightness(0);
+}
+
+.contact-image img {
+    width: 480px;
+    height: 640px;
+    object-fit: cover;
+    border-radius: 20px 20px 20px 20px;
+    display: block;
+}
+
+.contact-form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 400px;
+    position: relative;
+    top: 250px;
+    right: 130px;
+}
+
+.form-group { margin-bottom: 2.5rem; }
+
+.form-group label {
+    display: block;
+    color: var(--accent-color);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    font-family: 'Cabin', sans-serif;
+    letter-spacing: 0.03em;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--accent-color);
+    color: var(--text-light);
+    padding: 0.5rem 0;
+    font-size: 1rem;
+    font-family: var(--font-body);
+    resize: none;
+    transition: border-color 0.3s;
+    height: fit-content;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-bottom-color: var(--text-light);
+}
+
+button.submit-btn {
+    background-color: var(--accent-color);
+    width: 90%;
+    color: #000;
+    border: none;
+    padding: 1rem 3rem;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: opacity 0.3s;
+    font-family: 'Cabin', sans-serif;
+}
+
+button.submit-btn:hover { opacity: 0.8; }
+
+/* =========================================
+   MEDIA QUERY: NOTEBOOKS (1280px ~ 1366px)
+========================================= */
+@media (max-width: 1366px) {
+    .container {
+        max-width: 1280px;
+    }
+
+    .hero-image img {
+        width: 376px;
+        height: 462px;
+    }
+
+    .hero-text h1 {
+        font-size: 220px; 
+    }
+
+    .hero-text .name {
+        font-size: 36px;
+    }
+
+    .hero-subtitle p {
+        font-size: 24px;
+        max-width: 720px;
+    }
+
+    .hero-desc {
+        font-size: 20px;
+        max-width: 648px;
+    }
+
+    .about .outline-text {
+        font-size: 200px; 
+    }
+
+    .about-text p {
+        font-size: 14px;
+        line-height: 1.4; 
+        max-width: 419px;
+    }
+
+    .about-image img {
+        width: 455px;
+        height: 605px;
+    }
+
+    .stats-box {
+        width: 118px;
+        height: 522px;
+        gap: 2rem; 
+    }
+
+    .stat-item h3 {
+        font-size: 36px; 
+    }
+
+    .stat-item p {
+        font-size: 18px; 
+    }
+
+    .projects-section .outline-text {
+        font-size: 220px; 
+    }
+
+    .solid-title {
+        font-size: 220px; 
+    }
+
+    .contact-image img {
+        width: 490px;
+        height: 654px;
+    }
+}
+
+/* =========================================
+   MEDIA QUERY: TABLET (max-width: 768px)
+========================================= */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 2rem; 
+    }
+
+    .hero {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+    }
+
+    .hero-text {
+        order: 1; 
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .hero-text .name {
+        font-size: 36px;
+        text-align: left; 
+        width: 232px;
+    }
+
+    .hero-text h1 {
+        font-size: 140px; 
+        line-height: 0.8; 
+        max-width: 747px;
+    }
+
+    .hero-subtitle p {
+        font-size: 20px;
+        max-width: 636px;
+    }
+
+    .hero-desc {
+        font-size: 20px;
+        max-width: 296px;
+    }
+
+    .hero-image {
+        order: 2;
+        width: 100%;
+        justify-content: flex-end; 
+    }
+
+    .hero-image img {
+        width: 317px;
+        height: 389px;
+    }
+
+    .about {
+        padding-top: 8rem;
+    }
+
+    .about-content-wrapper {
+        flex-direction: column; 
+        gap: 3rem;
+        max-width: calc(100% - 93px); 
+    }
+
+    .about .outline-text {
+        font-size: 130px; 
+        line-height: 0.8;
+    }
+
+    .about-text p {
+        font-size: 11px; 
+        line-height: 1.3;
+        max-width: 328px;
+    }
+
+    .about-image img {
+        width: 283px;
+        height: 376px;
+    }
+
+    .stats-box {
+        width: 93px; 
+        height: 409px;
+        gap: 1.5rem; 
+    }
+
+    .stat-item h3 {
+        font-size: 24px; 
+    }
+
+    .stat-item p {
+        font-size: 14px;
+    }
+
+    .projects-section .outline-text {
+        font-size: 130px; 
+    }
+
+    .contact-section {
+        flex-direction: column; 
+        padding-top: 8rem;
+        gap: 3rem;
+    }
+
+    .solid-title {
+        font-size: 180px; 
+        line-height: 0.8;
+    }
+
+    .contact-image img {
+        width: 331px;
+        height: 442px;
+        border-radius: 0 35px 35px 0; 
+    }
+}
