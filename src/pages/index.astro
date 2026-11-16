@@ -1,0 +1,130 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Projects from '../components/Projects.astro';
+import Contact from '../components/Contact.astro';
+import ProjectModal from '../components/ProjectModal.astro';
+import { getPortfolioContent } from '../lib/strapi';
+
+// Fetch bilingual content from Strapi (with automatic fallback to static content)
+const contentPt = await getPortfolioContent('pt');
+const contentEn = await getPortfolioContent('en');
+---
+
+<Layout>
+  <Header />
+
+  <main class="w-full overflow-hidden">
+    <Hero contentPt={contentPt.hero} contentEn={contentEn.hero} />
+    <About contentPt={contentPt.about} contentEn={contentEn.about} />
+    <Projects projectsPt={contentPt.projects.items} projectsEn={contentEn.projects.items} />
+    <Contact contentPt={contentPt.contact} contentEn={contentEn.contact} />
+  </main>
+
+  <ProjectModal />
+
+  <!-- Language switcher & form interaction client script -->
+  <script>
+    type Language = 'en' | 'pt';
+
+    let currentLang: Language = 'en';
+
+    const btnEn = document.getElementById('btn-lang-en');
+    const btnPt = document.getElementById('btn-lang-pt');
+
+    function updateLanguageUI(lang: Language) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+
+      // Update button active states
+      if (lang === 'en') {
+        btnEn?.classList.remove('text-neutral-400', 'hover:text-white');
+        btnEn?.classList.add('bg-[#fbc000]', 'text-black', 'shadow-sm');
+        btnEn?.querySelector('.check-icon')?.classList.remove('hidden');
+
+        btnPt?.classList.remove('bg-[#fbc000]', 'text-black', 'shadow-sm');
+        btnPt?.classList.add('text-neutral-400', 'hover:text-white');
+        btnPt?.querySelector('.check-icon')?.classList.add('hidden');
+      } else {
+        btnPt?.classList.remove('text-neutral-400', 'hover:text-white');
+        btnPt?.classList.add('bg-[#fbc000]', 'text-black', 'shadow-sm');
+        btnPt?.querySelector('.check-icon')?.classList.remove('hidden');
+
+        btnEn?.classList.remove('bg-[#fbc000]', 'text-black', 'shadow-sm');
+        btnEn?.classList.add('text-neutral-400', 'hover:text-white');
+        btnEn?.querySelector('.check-icon')?.classList.add('hidden');
+      }
+
+      // Toggle text elements
+      document.querySelectorAll('.lang-text.lang-en').forEach((el) => {
+        if (lang === 'en') {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+
+      document.querySelectorAll('.lang-text.lang-pt').forEach((el) => {
+        if (lang === 'pt') {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+
+      // Save preference
+      localStorage.setItem('portfolio_lang', lang);
+    }
+
+    // Attach listeners
+    btnEn?.addEventListener('click', () => updateLanguageUI('en'));
+    btnPt?.addEventListener('click', () => updateLanguageUI('pt'));
+
+    // Check saved preference or browser language on load
+    const saved = localStorage.getItem('portfolio_lang') as Language | null;
+    if (saved === 'en' || saved === 'pt') {
+      updateLanguageUI(saved);
+    } else {
+      // Default to PT if browser is pt-BR or pt, else EN
+      const navLang = navigator.language.toLowerCase();
+      if (navLang.startsWith('pt')) {
+        updateLanguageUI('pt');
+      } else {
+        updateLanguageUI('en');
+      }
+    }
+
+    // Contact Form handling (supports sending to Strapi messages API if configured)
+    const contactForm = document.getElementById('contact-form') as HTMLFormElement | null;
+    const feedback = document.getElementById('form-feedback');
+
+    contactForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(contactForm);
+      const payload = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        message: formData.get('message'),
+      };
+
+      try {
+        // Attempt post to Strapi if endpoint exists
+        await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }).catch(() => {});
+      } catch (err) {}
+
+      if (feedback) {
+        feedback.classList.remove('hidden');
+        contactForm.reset();
+        setTimeout(() => {
+          feedback.classList.add('hidden');
+        }, 5000);
+      }
+    });
+  </script>
+</Layout>

@@ -1,0 +1,53 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cami-portfolio-strapi
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 1337
+    ports:
+      - "1337:1337"
+    volumes:
+      - ./backend:/opt/app
+      - /opt/app/node_modules
+      - strapi-data:/opt/app/.tmp
+      - strapi-uploads:/opt/app/public/uploads
+    networks:
+      - cami-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: cami-portfolio-astro
+    restart: unless-stopped
+    command: npm run dev -- --host 0.0.0.0 --force
+    environment:
+      STRAPI_URL: http://backend:1337
+      HOST: 0.0.0.0
+      PORT: 4321
+    ports:
+      - "4321:4321"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.astro
+    depends_on:
+      - backend
+    networks:
+      - cami-network
+
+volumes:
+  strapi-data:
+    driver: local
+  strapi-uploads:
+    driver: local
+
+networks:
+  cami-network:
+    driver: bridge

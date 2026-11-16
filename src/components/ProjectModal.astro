@@ -1,0 +1,137 @@
+---
+// Project Modal / Lightbox for viewing work details & video players
+---
+
+<div
+  id="project-modal"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+>
+  <!-- Modal Card Frame -->
+  <div
+    id="modal-container"
+    class="relative w-full max-w-3xl bg-[#1c1c1c] rounded-3xl border border-neutral-700/80 shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col"
+  >
+    <!-- Close Button -->
+    <button
+      id="modal-close-btn"
+      type="button"
+      class="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/60 hover:bg-[#fbc000] text-white hover:text-black flex items-center justify-center transition-colors duration-200 cursor-pointer shadow-lg"
+      aria-label="Close dialog"
+    >
+      <svg class="w-5 h-5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <!-- Media Frame (Image or Video) -->
+    <div class="relative w-full aspect-[16/9] sm:aspect-[16/10] bg-black overflow-hidden flex items-center justify-center">
+      <!-- Image Preview -->
+      <img
+        id="modal-image"
+        src=""
+        alt="Project Preview"
+        class="w-full h-full object-contain"
+      />
+
+      <!-- Video Player (shown when project has video) -->
+      <video
+        id="modal-video"
+        controls
+        playsinline
+        class="hidden w-full h-full object-contain bg-black"
+        src=""
+      ></video>
+    </div>
+
+    <!-- Modal Content Description -->
+    <div class="p-6 sm:p-8 flex flex-col gap-2 bg-[#1c1c1c]">
+      <span id="modal-category" class="text-xs uppercase font-semibold text-[#fbc000] tracking-wider"></span>
+      <h3 id="modal-title" class="font-display text-2xl sm:text-3xl text-white font-bold tracking-tight"></h3>
+      <p id="modal-desc" class="text-neutral-400 text-sm sm:text-base leading-relaxed mt-2"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Project modal interactions
+  const modal = document.getElementById('project-modal');
+  const modalContainer = document.getElementById('modal-container');
+  const closeBtn = document.getElementById('modal-close-btn');
+  const modalImg = document.getElementById('modal-image') as HTMLImageElement;
+  const modalVideo = document.getElementById('modal-video') as HTMLVideoElement;
+  const modalTitle = document.getElementById('modal-title');
+  const modalCategory = document.getElementById('modal-category');
+  const modalDesc = document.getElementById('modal-desc');
+
+  function openModal(card: HTMLElement) {
+    if (!modal || !modalImg || !modalTitle || !modalCategory || !modalDesc || !modalContainer) return;
+
+    const title = card.getAttribute('data-project-title') || '';
+    const category = card.getAttribute('data-project-category') || '';
+    const img = card.getAttribute('data-project-img') || '';
+    const desc = card.getAttribute('data-project-desc') || '';
+    const video = card.getAttribute('data-project-video') || '';
+
+    modalTitle.textContent = title;
+    modalCategory.textContent = category;
+    modalDesc.textContent = desc;
+
+    if (video) {
+      modalImg.classList.add('hidden');
+      if (modalVideo) {
+        modalVideo.src = video;
+        modalVideo.classList.remove('hidden');
+        modalVideo.play().catch(() => {});
+      }
+    } else {
+      if (modalVideo) {
+        modalVideo.pause();
+        modalVideo.src = '';
+        modalVideo.classList.add('hidden');
+      }
+      modalImg.src = img;
+      modalImg.classList.remove('hidden');
+    }
+
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    modal.classList.add('opacity-100');
+    modalContainer.classList.remove('scale-95');
+    modalContainer.classList.add('scale-100');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    if (!modal || !modalContainer) return;
+    if (modalVideo) {
+      modalVideo.pause();
+      modalVideo.src = '';
+    }
+    modal.classList.add('opacity-0', 'pointer-events-none');
+    modal.classList.remove('opacity-100');
+    modalContainer.classList.add('scale-95');
+    modalContainer.classList.remove('scale-100');
+    document.body.style.overflow = '';
+  }
+
+  // Attach card click listeners
+  document.querySelectorAll('.project-card').forEach((card) => {
+    card.addEventListener('click', () => openModal(card as HTMLElement));
+  });
+
+  closeBtn?.addEventListener('click', closeModal);
+
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.classList.contains('pointer-events-none')) {
+      closeModal();
+    }
+  });
+</script>

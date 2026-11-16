@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Palmore';
+  src: url('/fonts/PalmoreBold.ttf') format('truetype');
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Palmore';
+  src: url('/fonts/PalmoreRegular.ttf') format('truetype');
+  font-weight: 100 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Browalia';
+  src: url('/fonts/browa.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Objective';
+  src: url('/fonts/Objective-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Objective';
+  src: url('/fonts/Objective-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Objective';
+  src: url('/fonts/Objective-Bold.woff2') format('woff2');
+  font-weight: 700 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bubbleboddy';
+  src: url('/fonts/Bubbleboddy-ExtraLight.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --color-bg: #232323;
+  --color-gold: #fbc000;
+  --color-gold-hover: #e5af00;
+  --color-gold-dark: #b88a00;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: #ffffff;
+  font-family: 'Objective', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography styles based on Figma guidelines */
+/* Palmore for main headline */
+.font-display,
+.font-main {
+  font-family: 'Palmore', Georgia, serif;
+}
+
+/* Browalia for secondary headings (Sobre, Projetos, Contato, Stats) */
+.font-secondary,
+.font-browalia {
+  font-family: 'Browalia', sans-serif;
+}
+
+/* Objective for body text, bio, lorem ipsum, taglines, forms */
+.font-body,
+.font-objective {
+  font-family: 'Objective', sans-serif;
+}
+
+/* Cabin for yellow semi-card numbers */
+.font-cabin {
+  font-family: 'Cabin', sans-serif;
+}
+
+/* Bubbleboddy for yellow semi-card labels */
+.font-bubbleboddy {
+  font-family: 'Bubbleboddy', sans-serif;
+}
+
+/* Montserrat for contact form */
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.text-gold {
+  color: #fbc000;
+}
+
+.bg-gold {
+  background-color: #fbc000;
+}
+
+.border-gold {
+  border-color: #fbc000;
+}
+
+/* Outlined heading style matching Figma reference */
+.text-outline-gold {
+  color: transparent;
+  -webkit-text-stroke: 1px #FFC300;
+  letter-spacing: -0.01em;
+}
+
+.right-bar-shadow {
+  box-shadow: inset 0px 0px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1c1c1c;
+}
+::-webkit-scrollbar-thumb {
+  background: #fbc000;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d9a400;
+}

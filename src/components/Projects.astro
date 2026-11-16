@@ -1,0 +1,474 @@
+---
+// Projects Section - Pixel Perfect Bento Box (320px, 768px, 1280px, 1920px)
+// Includes Category Filter (Desktop + Mobile) & Pagination (8 items per Bento page)
+import type { ProjectItem } from '../data/translations';
+
+interface Props {
+  projectsPt?: ProjectItem[];
+  projectsEn?: ProjectItem[];
+}
+
+const { projectsPt, projectsEn } = Astro.props;
+
+import { content as defaultContent } from '../data/translations';
+const ptList = projectsPt || defaultContent.pt.projects.items;
+const enList = projectsEn || defaultContent.en.projects.items;
+
+// Map project category strings to the 3 Figma filter groups
+const getFilterGroup = (category: string): string => {
+  const c = (category || '').toLowerCase();
+  if (c.includes('web') || c.includes('ui') || c.includes('ux') || c.includes('site')) {
+    return 'webdesign';
+  }
+  if (
+    (c.includes('graphic') || c.includes('gráfico') || c.includes('identidade') || c.includes('blueprint') || c.includes('macro') || c.includes('produto')) &&
+    !c.includes('audiovisual')
+  ) {
+    return 'graphic-design';
+  }
+  return 'audiovisual';
+};
+
+// Slot classes for responsive Bento Box (slot index 0..7)
+// Mobile (<768px): 6-col Bento (287px container) matching Figma 320px exact heights
+// Tablet/Desktop (768px / 1280px / 1920px): 12-col Bento matching Figma 768/1280/1920 heights
+const BENTO_SLOTS = [
+  // Slot 0 (image 1)
+  'col-span-6 h-[161px] md:col-span-6 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+  // Slot 1 (image 2)
+  'col-span-3 h-[185px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px]',
+  // Slot 2 (image 3)
+  'col-span-2 h-[130px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px]',
+  // Slot 3 (image 5 - LightIS)
+  'col-span-3 h-[185px] md:col-span-4 md:h-[236px] lg:h-[398px] 2xl:h-[651px]',
+  // Slot 4 (image 4 - Sombras da Guerra)
+  'col-span-6 h-[160px] md:col-span-8 md:h-[239px] lg:h-[401px] 2xl:h-[657px]',
+  // Slot 5 (image 6 - Spotlight)
+  'col-span-6 h-[158px] md:col-span-6 md:h-[181px] lg:h-[305px] 2xl:h-[499px]',
+  // Slot 6 (image 7 - City Night)
+  'col-span-2 h-[130px] md:col-span-3 md:h-[181px] lg:h-[304px] 2xl:h-[498px]',
+  // Slot 7 (image 9 - Ribbed Lamp)
+  'col-span-2 h-[130px] md:col-span-3 md:h-[181px] lg:h-[305px] 2xl:h-[500px]',
+];
+
+// Mobile order vs Desktop order:
+// On Desktop: 0(6), 1(3), 2(3) | 3(4), 4(8) | 5(6), 6(3), 7(3)
+// On Mobile:  0(6) | 1(3), 3(3) | 4(6) | 5(6) | 2(2), 6(2), 7(2)
+const MOBILE_ORDER = [
+  'order-1 md:order-none',
+  'order-2 md:order-none',
+  'order-6 md:order-none',
+  'order-3 md:order-none',
+  'order-4 md:order-none',
+  'order-5 md:order-none',
+  'order-7 md:order-none',
+  'order-8 md:order-none',
+];
+---
+
+<section id="projects" class="relative w-full py-12 md:py-20 lg:py-24 px-4 sm:px-8 md:px-14 lg:px-20 max-w-[1694px] mx-auto">
+
+  <!-- ========================================================================= -->
+  <!-- HEADER + CATEGORY FILTER (Desktop & Mobile)                               -->
+  <!-- ========================================================================= -->
+  <div class="flex flex-col md:flex-row md:items-center justify-left gap-4 md:gap-8 mb-8 md:mb-12 lg:mb-16">
+    <!-- Outlined Section Header: Palmore 1px #FFC300 stroke -->
+    <h2 class="font-display text-outline-gold font-normal uppercase text-[90px] md:text-[130px] lg:text-[220px] 2xl:text-[350px] leading-[0.82] md:leading-[0.78] lg:leading-[0.74] tracking-tight select-none">
+      <span class="lang-text lang-en">PROJECTS</span>
+      <span class="lang-text lang-pt hidden">PROJETOS</span>
+    </h2>
+
+    <!-- Category Filters: Browalia, uppercase, #FFC400 active / #666666 inactive -->
+    <div id="projects-filter" class="flex flex-row md:flex-col flex-wrap items-start gap-x-5 gap-y-1 md:gap-0 font-browalia uppercase text-[18px] md:text-[22px] lg:text-[30px] 2xl:text-[42px] leading-tight 2xl:leading-[60px] select-none">
+      <button
+        type="button"
+        data-filter="all"
+        class="project-filter-btn text-[#FFC400] transition-colors duration-200 cursor-pointer text-left font-normal"
+      >
+        <span class="lang-text lang-en">ALL</span>
+        <span class="lang-text lang-pt hidden">TODOS</span>
+      </button>
+      <button
+        type="button"
+        data-filter="audiovisual"
+        class="project-filter-btn text-neutral-500 hover:text-[#FFC400] transition-colors duration-200 cursor-pointer text-left font-normal"
+      >
+        AUDIOVISUAL
+      </button>
+      <button
+        type="button"
+        data-filter="webdesign"
+        class="project-filter-btn text-neutral-500 hover:text-[#FFC400] transition-colors duration-200 cursor-pointer text-left font-normal"
+      >
+        WEBDESIGN
+      </button>
+      <button
+        type="button"
+        data-filter="graphic-design"
+        class="project-filter-btn text-neutral-500 hover:text-[#FFC400] transition-colors duration-200 cursor-pointer text-left font-normal"
+      >
+        GRAPHIC DESIGN
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- BENTO BOX GRID (EN) - Responsive Mobile (287px 6-col) & Desktop (12-col)  -->
+  <!-- ========================================================================= -->
+  <div id="bento-grid-en" class="lang-text lang-en grid grid-cols-6 md:grid-cols-12 gap-2.5 md:gap-4 lg:gap-6 max-w-[287px] md:max-w-none mx-auto items-stretch">
+    {enList.map((project, idx) => {
+      const slotIdx = idx % 8;
+      const filterGroups = project.filterGroups && project.filterGroups.length > 0
+        ? project.filterGroups
+        : [getFilterGroup(project.category)];
+      return (
+        <div
+          class={`project-card bento-item group relative overflow-hidden rounded-[12px] md:rounded-[20px] bg-neutral-900 border border-neutral-800/80 cursor-pointer shadow-xl transition-all duration-300 hover:border-[#FFC400]/70 ${BENTO_SLOTS[slotIdx]} ${MOBILE_ORDER[slotIdx]}`}
+          data-filter-groups={filterGroups.join(',')}
+          data-default-slot={slotIdx}
+          data-project-title={project.title}
+          data-project-category={project.category}
+          data-project-img={project.image}
+          data-project-desc={project.description || ''}
+          data-project-video={project.videoUrl || ''}
+        >
+          <img
+            src={project.image}
+            alt={project.title}
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+
+          {project.hasAwards && (
+            <div class="absolute top-2 left-2 md:top-4 md:left-4 z-20 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2.5 py-1 md:px-3.5 md:py-1.5 rounded-full border border-[#FFC400]/70 shadow-xl">
+              <span class="text-[10px] md:text-sm">🏆</span>
+              <span class="text-[8px] md:text-[11px] font-bold text-[#FFC400] uppercase tracking-wider">Award Winner</span>
+            </div>
+          )}
+
+          {project.hasPlay && (
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div class="w-9 h-9 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/60 flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-[#FFC400] group-hover:border-[#FFC400]">
+                <svg class="w-4 h-4 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white group-hover:text-black ml-0.5 fill-current transition-colors" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
+          )}
+
+          <div class="hidden md:block absolute bottom-0 inset-x-0 p-4 lg:p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+            <span class="text-xs uppercase font-semibold text-[#FFC400] tracking-wider block font-browalia">{project.category}</span>
+            <h3 class="text-white text-base lg:text-lg font-bold font-objective truncate mt-0.5">{project.title}</h3>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- BENTO BOX GRID (PT) - Responsive Mobile (287px 6-col) & Desktop (12-col)  -->
+  <!-- ========================================================================= -->
+  <div id="bento-grid-pt" class="lang-text lang-pt hidden grid grid-cols-6 md:grid-cols-12 gap-2.5 md:gap-4 lg:gap-6 max-w-[287px] md:max-w-none mx-auto items-stretch">
+    {ptList.map((project, idx) => {
+      const slotIdx = idx % 8;
+      const filterGroups = project.filterGroups && project.filterGroups.length > 0
+        ? project.filterGroups
+        : [getFilterGroup(project.category)];
+      return (
+        <div
+          class={`project-card bento-item group relative overflow-hidden rounded-[12px] md:rounded-[20px] bg-neutral-900 border border-neutral-800/80 cursor-pointer shadow-xl transition-all duration-300 hover:border-[#FFC400]/70 ${BENTO_SLOTS[slotIdx]} ${MOBILE_ORDER[slotIdx]}`}
+          data-filter-groups={filterGroups.join(',')}
+          data-default-slot={slotIdx}
+          data-project-title={project.title}
+          data-project-category={project.category}
+          data-project-img={project.image}
+          data-project-desc={project.description || ''}
+          data-project-video={project.videoUrl || ''}
+        >
+          <img
+            src={project.image}
+            alt={project.title}
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+
+          {project.hasAwards && (
+            <div class="absolute top-2 left-2 md:top-4 md:left-4 z-20 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2.5 py-1 md:px-3.5 md:py-1.5 rounded-full border border-[#FFC400]/70 shadow-xl">
+              <span class="text-[10px] md:text-sm">🏆</span>
+              <span class="text-[8px] md:text-[11px] font-bold text-[#FFC400] uppercase tracking-wider">Curta Premiado</span>
+            </div>
+          )}
+
+          {project.hasPlay && (
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div class="w-9 h-9 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/60 flex items-center justify-center shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-[#FFC400] group-hover:border-[#FFC400]">
+                <svg class="w-4 h-4 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white group-hover:text-black ml-0.5 fill-current transition-colors" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
+          )}
+
+          <div class="hidden md:block absolute bottom-0 inset-x-0 p-4 lg:p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+            <span class="text-xs uppercase font-semibold text-[#FFC400] tracking-wider block font-browalia">{project.category}</span>
+            <h3 class="text-white text-base lg:text-lg font-bold font-objective truncate mt-0.5">{project.title}</h3>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- Empty state when filter has 0 results -->
+  <div id="projects-empty" class="hidden py-14 text-center">
+    <p class="text-neutral-400 text-sm md:text-base font-objective mb-4">
+      <span class="lang-text lang-en">No projects found in this category yet.</span>
+      <span class="lang-text lang-pt hidden">Nenhum projeto encontrado nesta categoria ainda.</span>
+    </p>
+    <button
+      id="projects-reset-filter"
+      type="button"
+      class="px-5 py-2 rounded-full bg-[#FFC400] text-black text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-[#e5af00] transition-colors"
+    >
+      <span class="lang-text lang-en">Show All</span>
+      <span class="lang-text lang-pt hidden">Ver Todos</span>
+    </button>
+  </div>
+
+  <!-- Pagination Controls (rendered automatically when > 8 items) -->
+  <div id="projects-pagination" class="hidden mt-8 md:mt-12 flex items-center justify-center gap-2 font-browalia"></div>
+
+</section>
+
+<script>
+  const PAGE_SIZE = 8;
+
+  // Exact 8-item Figma Bento Box
+  const FULL_8_SLOTS = [
+    'col-span-6 h-[161px] md:col-span-6 md:h-[192px] lg:h-[322px] 2xl:h-[527px] order-1 md:order-none',
+    'col-span-3 h-[185px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px] order-2 md:order-none',
+    'col-span-2 h-[130px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px] order-6 md:order-none',
+    'col-span-3 h-[185px] md:col-span-4 md:h-[236px] lg:h-[398px] 2xl:h-[651px] order-3 md:order-none',
+    'col-span-6 h-[160px] md:col-span-8 md:h-[239px] lg:h-[401px] 2xl:h-[657px] order-4 md:order-none',
+    'col-span-6 h-[158px] md:col-span-6 md:h-[181px] lg:h-[305px] 2xl:h-[499px] order-5 md:order-none',
+    'col-span-2 h-[130px] md:col-span-3 md:h-[181px] lg:h-[304px] 2xl:h-[498px] order-7 md:order-none',
+    'col-span-2 h-[130px] md:col-span-3 md:h-[181px] lg:h-[305px] 2xl:h-[500px] order-8 md:order-none',
+  ];
+
+  // Dynamic Bento layouts when visible count is 1..7 so rows never leave empty gaps
+  const BENTO_BY_COUNT: Record<number, string[]> = {
+    1: [
+      'col-span-6 h-[185px] md:col-span-12 md:h-[260px] lg:h-[420px] 2xl:h-[600px]',
+    ],
+    2: [
+      'col-span-6 h-[161px] md:col-span-7 md:h-[220px] lg:h-[360px] 2xl:h-[540px]',
+      'col-span-6 h-[161px] md:col-span-5 md:h-[220px] lg:h-[360px] 2xl:h-[540px]',
+    ],
+    3: [
+      'col-span-6 h-[161px] md:col-span-6 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+      'col-span-3 h-[185px] md:col-span-3 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+      'col-span-3 h-[185px] md:col-span-3 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+    ],
+    4: [
+      'col-span-6 h-[161px] md:col-span-6 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+      'col-span-3 h-[185px] md:col-span-6 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+      'col-span-3 h-[185px] md:col-span-4 md:h-[236px] lg:h-[398px] 2xl:h-[651px]',
+      'col-span-6 h-[160px] md:col-span-8 md:h-[236px] lg:h-[398px] 2xl:h-[651px]',
+    ],
+    5: [
+      'col-span-6 h-[161px] md:col-span-6 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+      'col-span-3 h-[185px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px]',
+      'col-span-3 h-[185px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px]',
+      'col-span-2 h-[130px] md:col-span-4 md:h-[236px] lg:h-[398px] 2xl:h-[651px]',
+      'col-span-4 h-[130px] md:col-span-8 md:h-[239px] lg:h-[401px] 2xl:h-[657px]',
+    ],
+    6: [
+      'col-span-6 h-[161px] md:col-span-6 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+      'col-span-3 h-[185px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px]',
+      'col-span-3 h-[185px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px]',
+      'col-span-6 h-[160px] md:col-span-6 md:h-[181px] lg:h-[305px] 2xl:h-[499px]',
+      'col-span-3 h-[158px] md:col-span-3 md:h-[181px] lg:h-[304px] 2xl:h-[498px]',
+      'col-span-3 h-[158px] md:col-span-3 md:h-[181px] lg:h-[305px] 2xl:h-[500px]',
+    ],
+    7: [
+      'col-span-6 h-[161px] md:col-span-6 md:h-[192px] lg:h-[322px] 2xl:h-[527px]',
+      'col-span-3 h-[185px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px]',
+      'col-span-3 h-[185px] md:col-span-3 md:h-[190px] lg:h-[320px] 2xl:h-[523px]',
+      'col-span-6 h-[160px] md:col-span-4 md:h-[236px] lg:h-[398px] 2xl:h-[651px]',
+      'col-span-2 h-[130px] md:col-span-8 md:h-[239px] lg:h-[401px] 2xl:h-[657px]',
+      'col-span-2 h-[130px] md:col-span-6 md:h-[181px] lg:h-[305px] 2xl:h-[499px]',
+      'col-span-2 h-[130px] md:col-span-6 md:h-[181px] lg:h-[305px] 2xl:h-[499px]',
+    ],
+    8: FULL_8_SLOTS,
+  };
+
+  const ALL_SLOT_TOKENS = Array.from(
+    new Set(
+      [...FULL_8_SLOTS, ...Object.values(BENTO_BY_COUNT).flat()].flatMap((c) => c.split(' '))
+    )
+  );
+
+  let activeFilter = 'all';
+  let currentPage = 1;
+
+  const filterButtons = document.querySelectorAll('.project-filter-btn');
+  const paginationEl = document.getElementById('projects-pagination');
+  const emptyEl = document.getElementById('projects-empty');
+  const resetBtn = document.getElementById('projects-reset-filter');
+
+  function applyProjectsView() {
+    const grids = [
+      document.getElementById('bento-grid-en'),
+      document.getElementById('bento-grid-pt'),
+    ];
+
+    let maxMatchedCount = 0;
+
+    grids.forEach((grid) => {
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll('.bento-item')) as HTMLElement[];
+
+      const matched = cards.filter((card) => {
+        if (activeFilter === 'all') return true;
+        const groups = (card.dataset.filterGroups || '').split(',').filter(Boolean);
+        return groups.includes(activeFilter);
+      });
+
+      if (!grid.classList.contains('hidden')) {
+        maxMatchedCount = matched.length;
+      }
+
+      const totalPages = Math.max(1, Math.ceil(matched.length / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = 1;
+
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const pageItems = matched.slice(start, end);
+
+      // Hide all cards first
+      cards.forEach((c) => {
+        c.classList.add('hidden');
+      });
+
+      // Show current page items & assign responsive Bento slot classes for the visible count
+      const layout = BENTO_BY_COUNT[pageItems.length] || FULL_8_SLOTS;
+      pageItems.forEach((card, i) => {
+        card.classList.remove('hidden', ...ALL_SLOT_TOKENS);
+        const slotTokens = (layout[i] || FULL_8_SLOTS[i % 8]).split(' ');
+        card.classList.add(...slotTokens);
+      });
+    });
+
+    // Empty state
+    if (emptyEl) {
+      if (maxMatchedCount === 0) {
+        emptyEl.classList.remove('hidden');
+      } else {
+        emptyEl.classList.add('hidden');
+      }
+    }
+
+    // Pagination controls (only shown if > 8 matched projects)
+    renderPagination(maxMatchedCount);
+  }
+
+  function renderPagination(totalItems: number) {
+    if (!paginationEl) return;
+    const totalPages = Math.ceil(totalItems / PAGE_SIZE);
+
+    if (totalPages <= 1) {
+      paginationEl.classList.add('hidden');
+      paginationEl.innerHTML = '';
+      return;
+    }
+
+    paginationEl.classList.remove('hidden');
+    paginationEl.innerHTML = '';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.type = 'button';
+    prevBtn.textContent = '←';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.className =
+      'px-3 py-1 rounded-full border border-neutral-700 text-sm text-neutral-300 hover:border-[#FFC400] hover:text-[#FFC400] disabled:opacity-40 cursor-pointer transition-colors';
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        applyProjectsView();
+      }
+    });
+    paginationEl.appendChild(prevBtn);
+
+    for (let p = 1; p <= totalPages; p++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = String(p);
+      btn.className =
+        p === currentPage
+          ? 'w-8 h-8 rounded-full bg-[#FFC400] text-black font-bold text-sm cursor-pointer'
+          : 'w-8 h-8 rounded-full border border-neutral-700 text-neutral-300 hover:border-[#FFC400] hover:text-[#FFC400] text-sm cursor-pointer transition-colors';
+      btn.addEventListener('click', () => {
+        currentPage = p;
+        applyProjectsView();
+      });
+      paginationEl.appendChild(btn);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.type = 'button';
+    nextBtn.textContent = '→';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.className =
+      'px-3 py-1 rounded-full border border-neutral-700 text-sm text-neutral-300 hover:border-[#FFC400] hover:text-[#FFC400] disabled:opacity-40 cursor-pointer transition-colors';
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        applyProjectsView();
+      }
+    });
+    paginationEl.appendChild(nextBtn);
+  }
+
+  function updateFilterUI(selected: string) {
+    filterButtons.forEach((btn) => {
+      const el = btn as HTMLElement;
+      if (el.dataset.filter === selected) {
+        el.classList.remove('text-neutral-500');
+        el.classList.add('text-[#FFC400]');
+      } else {
+        el.classList.remove('text-[#FFC400]');
+        el.classList.add('text-neutral-500');
+      }
+    });
+  }
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const el = btn as HTMLElement;
+      const target = el.dataset.filter || 'all';
+      activeFilter = activeFilter === target && target !== 'all' ? 'all' : target;
+      currentPage = 1;
+      updateFilterUI(activeFilter);
+      applyProjectsView();
+    });
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    activeFilter = 'all';
+    currentPage = 1;
+    updateFilterUI('all');
+    applyProjectsView();
+  });
+
+  // Re-apply when language changes
+  document.getElementById('btn-lang-en')?.addEventListener('click', () => {
+    setTimeout(applyProjectsView, 10);
+  });
+  document.getElementById('btn-lang-pt')?.addEventListener('click', () => {
+    setTimeout(applyProjectsView, 10);
+  });
+
+  // Initial render
+  applyProjectsView();
+</script>

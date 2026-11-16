@@ -1,0 +1,27 @@
+---
+// Header with language toggle - Pixel Perfect (No 'CF' as per Figma Reference)
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-end md:justify-start px-4 py-3 sm:px-6 md:px-14 md:py-8 pointer-events-none">
+  <!-- Language Switcher Pill (Top-Right on Mobile, Top-Left on Desktop & Tablet) -->
+  <div class="pointer-events-auto bg-[#181818]/90 backdrop-blur-md border border-neutral-700/60 rounded-full p-1 flex items-center shadow-lg shadow-black/40">
+    <button
+      id="btn-lang-en"
+      type="button"
+      class="lang-toggle-btn px-3.5 py-1 text-xs font-bold rounded-full transition-all duration-300 flex items-center gap-1 cursor-pointer bg-[#fbc000] text-black shadow-sm"
+      aria-label="Switch to English"
+      data-target-lang="en"
+    >
+      <span class="check-icon text-[10px]">✓</span> EN
+    </button>
+    <button
+      id="btn-lang-pt"
+      type="button"
+      class="lang-toggle-btn px-3.5 py-1 text-xs font-bold rounded-full transition-all duration-300 flex items-center gap-1 cursor-pointer text-neutral-400 hover:text-white"
+      aria-label="Mudar para Português"
+      data-target-lang="pt"
+    >
+      <span class="check-icon hidden text-[10px]">✓</span> PT
+    </button>
+  </div>
+</header>

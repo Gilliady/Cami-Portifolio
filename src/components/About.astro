@@ -1,0 +1,181 @@
+---
+// About Section - Pixel Perfect matching Figma Specs (320px, 768px, 1280px, 1920px)
+import type { ContentData } from '../data/translations';
+
+interface Props {
+  contentPt?: ContentData['about'];
+  contentEn?: ContentData['about'];
+}
+
+const { contentPt, contentEn } = Astro.props;
+
+const pt = contentPt || {
+  heading: 'SOBRE',
+  paragraphs: [
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed condimentum purus eu cursus fermentum. Sed lacinia purus eget ullamcorper faucibus. Phasellus pharetra gravida enim at maximus. Cras consectetur luctus egestas. Curabitur interdum nisi eu pharetra bibendum. Nunc fermentum luctus ultricies. Aliquam dui eros, congue id lobortis a, iaculis non neque. Quisque eget placerat mi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.',
+    'Phasellus a congue lacus, et lobortis ante. Donec consequat, massa in hendrerit vehicula, quam nisi luctus magna, in vestibulum nulla sem sed felis. Phasellus vitae leo ullamcorper lacus blandit vulputate. Praesent volutpat suscipit gravida. Aliquam euismod sodales commodo. In tristique nisi id tempor tempus. Integer at nunc et nulla varius vulputate eu in tortor. Vivamus vel arcu non est tincidunt mollis id sit amet ipsum.',
+  ],
+  stats: [
+    { number: '+10', label: 'anos de experiência' },
+    { number: '+200', label: 'entregas de sucesso' },
+    { number: '09', label: 'prêmios e nomeações' },
+    { number: '+1M', label: 'views totais nas mídias' },
+  ],
+};
+
+const en = contentEn || {
+  heading: 'ABOUT',
+  paragraphs: [
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed condimentum purus eu cursus fermentum. Sed lacinia purus eget ullamcorper faucibus. Phasellus pharetra gravida enim at maximus. Cras consectetur luctus egestas. Curabitur interdum nisi eu pharetra bibendum. Nunc fermentum luctus ultricies. Aliquam dui eros, congue id lobortis a, iaculis non neque. Quisque eget placerat mi. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.',
+    'Phasellus a congue lacus, et lobortis ante. Donec consequat, massa in hendrerit vehicula, quam nisi luctus magna, in vestibulum nulla sem sed felis. Phasellus vitae leo ullamcorper lacus blandit vulputate. Praesent volutpat suscipit gravida. Aliquam euismod sodales commodo. In tristique nisi id tempor tempus.',
+  ],
+  stats: [
+    { number: '+10', label: 'years of experience' },
+    { number: '+200', label: 'successful deliveries' },
+    { number: '09', label: 'awards and nominations' },
+    { number: '+1M', label: 'total views generated' },
+  ],
+};
+
+const aboutPortrait = pt.portrait || en.portrait || '/images/about_camila.png';
+---
+
+<section id="about" class="relative w-full py-12 md:py-20 lg:py-24 overflow-hidden">
+
+  <!-- ========================================================================= -->
+  <!-- MOBILE LAYOUT (< 768px / 320px)                                           -->
+  <!-- SOBRE/ABOUT sobrepõe o topo da imagem; Lorem ipsum sobrepõe a base escura -->
+  <!-- ========================================================================= -->
+  <div class="flex flex-col items-center px-3 md:hidden">
+    <div class="relative w-full max-w-[295px] flex flex-col items-center">
+      
+      <!-- Layered Image + Overlapping Texts -->
+      <div class="relative w-full flex flex-col items-center pb-4">
+        
+        <!-- 1. Image About: 283x376 rounded-[41px] -->
+        <div class="w-[283px] h-[376px] rounded-[41px] overflow-hidden flex items-center justify-center mt-5">
+          <img
+            src={aboutPortrait}
+            alt="Camila Ferreira - Adobe Creative Suite profile"
+            class="w-full h-full object-contain [clip-path:inset(0_8px_0_0)]"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- 2. Overlapping Heading: ABOUT / SOBRE (130px, Palmore, 1px #FFC300 stroke) -->
+        <h2 class="font-display text-outline-gold font-normal uppercase text-[130px] leading-[0.78] tracking-tight select-none absolute top-0 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap pointer-events-none">
+          <span class="lang-text lang-en">{en.heading}</span>
+          <span class="lang-text lang-pt hidden">{pt.heading}</span>
+        </h2>
+
+        <!-- 3. Overlapping Bio Text over dark lower area of image: w-[242px], 10px / 13px -->
+        <div class="relative z-10 -mt-[115px] w-[242px] font-objective font-normal text-white text-[10px] leading-[13px] text-justify">
+          <div class="lang-text lang-en">
+            <p>{en.paragraphs[0]}</p>
+          </div>
+          <div class="lang-text lang-pt hidden">
+            <p>{pt.paragraphs[0]}</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4. Horizontal Stats Pill Bar: 295x73 rounded-[28px] -->
+      <div class="w-full h-[73px] bg-[#FFC400] text-black rounded-[28px] right-bar-shadow px-3 flex items-center justify-between mt-1 font-cabin">
+        <!-- EN Mobile Stats -->
+        <div class="lang-text lang-en grid grid-cols-4 gap-1 w-full text-center">
+          {en.stats.map((s) => (
+            <div class="flex flex-col items-center justify-center">
+              <span class="font-cabin font-bold text-[24px] leading-none">{s.number}</span>
+              <span class="font-bubbleboddy font-extralight text-[10px] leading-[10px] lowercase mt-0.5">{s.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <!-- PT Mobile Stats -->
+        <div class="lang-text lang-pt hidden grid grid-cols-4 gap-1 w-full text-center">
+          {pt.stats.map((s) => (
+            <div class="flex flex-col items-center justify-center">
+              <span class="font-cabin font-bold text-[24px] leading-none">{s.number}</span>
+              <span class="font-bubbleboddy font-extralight text-[10px] leading-[10px] lowercase mt-0.5">{s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TABLET & DESKTOP LAYOUT (768px, 1280px, 1920px)                           -->
+  <!-- SOBRE/ABOUT + Parágrafo lado a lado com a imagem + Right_bar na direita   -->
+  <!-- ========================================================================= -->
+  <div class="hidden md:flex flex-row items-center justify-between w-full max-w-[1920px] mx-auto pl-16 lg:pl-32 2xl:pl-58 pr-[108px] lg:pr-[140px] 2xl:pr-[220px] gap-4 lg:gap-8 2xl:gap-12">
+
+    <!-- LEFT COLUMN: Heading (SOBRE/ABOUT) + Paragraph -->
+    <div class="flex flex-col items-start shrink-0 md:w-[329px] lg:w-[419px] 2xl:w-[636px]">
+      <!-- Outlined Section Header: 1px #FFC300 stroke, Palmore -->
+      <h2 class="font-display text-outline-gold font-normal uppercase md:text-[130px] lg:text-[200px] 2xl:text-[350px] md:leading-[0.82] lg:leading-[0.78] 2xl:leading-[0.72] tracking-tight select-none mb-4 lg:mb-6 2xl:mb-8">
+        <span class="lang-text lang-en">{en.heading}</span>
+        <span class="lang-text lang-pt hidden">{pt.heading}</span>
+      </h2>
+
+      <!-- Bio Text: Objective, Regular 400, #FFFFFF, text-justify -->
+      <div class="font-objective font-normal text-white text-justify md:text-[11px] md:leading-[13px] lg:text-[14px] lg:leading-[18px] 2xl:text-[20px] 2xl:leading-[32px] w-full">
+        <div class="lang-text lang-en flex flex-col gap-3 lg:gap-4 2xl:gap-6">
+          {en.paragraphs.map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+
+        <div class="lang-text lang-pt hidden flex flex-col gap-3 lg:gap-4 2xl:gap-6">
+          {pt.paragraphs.map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDDLE/RIGHT COLUMN: Portrait with Adobe Badges -->
+    <div class="flex justify-center items-center shrink-0">
+      <div class="relative md:w-[283px] md:h-[376px] lg:w-[455px] lg:h-[605px] 2xl:w-[600px] 2xl:h-[792px]">
+        <img
+          src={aboutPortrait}
+          alt="Camila Ferreira - Adobe Creative Suite profile"
+          class="relative z-10 w-full h-full object-contain drop-shadow-2xl [clip-path:inset(0_8px_0_0)]"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- DESKTOP & TABLET RIGHT-DOCKED YELLOW BAR (Right_bar)                      -->
+  <!-- 768px: 93x410 | 1280px: 119x522 | 1920px: 180x792                         -->
+  <!-- ========================================================================= -->
+  <div class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-[#FFC400] text-black rounded-l-[82px] right-bar-shadow md:w-[93px] md:h-[410px] lg:w-[119px] lg:h-[522px] 2xl:w-[180px] 2xl:h-[792px] flex-col justify-center px-3 lg:px-4 2xl:px-6 font-cabin">
+    
+    <!-- EN Stats -->
+    <div class="lang-text lang-en flex flex-col justify-evenly h-full py-6 lg:py-8 2xl:py-10 w-full">
+      {en.stats.map((s) => (
+        <div class="flex flex-col items-start">
+          <span class="font-cabin font-bold md:text-[32px] lg:text-[36px] 2xl:text-[64px] leading-[0.85] tracking-tight">{s.number}</span>
+          <span class="font-bubbleboddy font-extralight md:text-[14px] md:leading-[16px] lg:text-[18px] lg:leading-[16px] 2xl:text-[25px] 2xl:leading-[25px] lowercase mt-1">{s.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- PT Stats -->
+    <div class="lang-text lang-pt hidden flex flex-col justify-evenly h-full py-6 lg:py-8 2xl:py-10 w-full">
+      {pt.stats.map((s) => (
+        <div class="flex flex-col items-start">
+          <span class="font-cabin font-bold md:text-[32px] lg:text-[36px] 2xl:text-[64px] leading-[0.85] tracking-tight">{s.number}</span>
+          <span class="font-bubbleboddy font-extralight md:text-[14px] md:leading-[16px] lg:text-[18px] lg:leading-[16px] 2xl:text-[25px] 2xl:leading-[25px] lowercase mt-1">{s.label}</span>
+        </div>
+      ))}
+    </div>
+
+  </div>
+
+</section>

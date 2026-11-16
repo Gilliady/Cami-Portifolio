@@ -1,0 +1,174 @@
+---
+// Hero Section - Mobile First Pixel Perfect with Strapi CMS support
+import type { ContentData } from '../data/translations';
+
+interface Props {
+  contentPt?: ContentData['hero'];
+  contentEn?: ContentData['hero'];
+}
+
+const { contentPt, contentEn } = Astro.props;
+
+const pt = contentPt || {
+  tagline: 'A INTERSECÇÃO ENTRE DESIGN, ARTE E TECNOLOGIA.',
+  name: 'CAMILA FERREIRA',
+  title: 'PRODUTORA AUDIOVISUAL',
+  description: 'Criando experiências visuais para um mundo digital. Entregando o máximo potencial do seu projeto.',
+};
+
+const en = contentEn || {
+  tagline: 'THE INTERSECTION OF DESIGN, ART, AND TECHNOLOGY.',
+  name: 'CAMILA FERREIRA',
+  title: 'AUDIOVISUAL PRODUCER',
+  description: 'Creating visual experiences for a digital world. Unleashing your project’s full potential.',
+};
+
+const heroPortrait = pt.portrait || en.portrait || '/images/hero_camila.png';
+---
+
+<section id="hero" class="relative w-full pt-16 sm:pt-20 md:pt-20 lg:pt-24 pb-12 sm:pb-16 px-2 sm:px-6 md:px-10 lg:px-16 xl:px-24 max-w-[1920px] mx-auto overflow-hidden">
+  
+  <!-- ========================================================================= -->
+  <!-- MOBILE HERO: < 768px -> w-full (304px at 320) h-[390px], font 64px,       -->
+  <!-- rounded-tl-[20px] rounded-tr-none rounded-bl-[20px] rounded-br-[20px]     -->
+  <!-- ========================================================================= -->
+  <div class="block md:hidden w-full flex justify-center">
+    <div class="relative w-full h-[390px] rounded-tl-[20px] rounded-tr-none rounded-bl-[20px] rounded-br-[20px] overflow-hidden border border-neutral-800/80 bg-neutral-950 flex flex-col justify-between p-4 sm:p-5">
+      
+      <!-- Full-bleed background portrait -->
+      <img
+        src={heroPortrait}
+        alt="Camila Ferreira - Audiovisual Producer"
+        class="absolute inset-0 w-full h-full object-cover object-top pointer-events-none select-none"
+        loading="eager"
+      />
+
+      <!-- TOP-LEFT: Tagline + 3 Celestial Moon Phase Indicators -->
+      <div class="relative z-10 flex flex-col gap-1.5 max-w-[240px]">
+        <p class="text-[#fbc000] text-[11px] font-semibold tracking-[0.18em] uppercase leading-tight font-browalia">
+          <span class="lang-text lang-en">{en.tagline}</span>
+          <span class="lang-text lang-pt hidden">{pt.tagline}</span>
+        </p>
+
+        <!-- 3 Celestial Phase Indicators: ◑ ◯ ◐ -->
+        <div class="flex items-center gap-1.5 mt-0.5">
+          <!-- Moon 1: ◑ (First quarter: Left solid, Right dark) -->
+          <span class="w-2.5 h-2.5 rounded-full border border-[#fbc000] overflow-hidden flex">
+            <span class="w-1/2 h-full bg-[#fbc000]"></span>
+            <span class="w-1/2 h-full bg-[#1a1a1a]"></span>
+          </span>
+          <!-- Moon 2: ◯ (Full hollow circle) -->
+          <span class="w-2.5 h-2.5 rounded-full border border-[#fbc000] bg-transparent"></span>
+          <!-- Moon 3: ◐ (Last quarter: Left dark, Right solid) -->
+          <span class="w-2.5 h-2.5 rounded-full border border-[#fbc000] overflow-hidden flex">
+            <span class="w-1/2 h-full bg-[#1a1a1a]"></span>
+            <span class="w-1/2 h-full bg-[#fbc000]"></span>
+          </span>
+        </div>
+      </div>
+
+      <!-- BOTTOM: Name, Headline, and Description (font-size 64px) -->
+      <div class="relative z-10 flex flex-col gap-0.5 mt-auto">
+        <!-- 1. Camila Ferreira (mobile: 16px) -->
+        <span class="text-[#fbc000] text-[16px] font-semibold tracking-[0.22em] uppercase font-browalia leading-tight">
+          {pt.name}
+        </span>
+
+        <!-- 2. Headline (font: 64px on mobile, regular Palmore weight, sem shadow) -->
+        <h1 class="font-display text-[#fbc000] font-normal tracking-tight uppercase leading-[0.85] text-[64px] my-1 select-none">
+          <span class="lang-text lang-en block">
+            {en.title.includes(' ') ? en.title.split(' ')[0] : en.title}<br />{en.title.includes(' ') ? en.title.split(' ').slice(1).join(' ') : ''}
+          </span>
+          <span class="lang-text lang-pt hidden">
+            {pt.title.includes(' ') ? pt.title.split(' ')[0] : pt.title}<br />{pt.title.includes(' ') ? pt.title.split(' ').slice(1).join(' ') : ''}
+          </span>
+        </h1>
+
+        <!-- 3. Subtitle Description (mobile: 9px) -->
+        <p class="text-[#fbc000]/80 text-[9px] font-normal leading-relaxed mt-0.5 font-browalia">
+          <span class="lang-text lang-en">{en.description}</span>
+          <span class="lang-text lang-pt hidden">{pt.description}</span>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- TABLET & DESKTOP HERO (768px, 1280px, 1920px)                             -->
+  <!-- Image: 768 -> w-[317px] h-[389px]                                         -->
+  <!--        1280 -> w-[376px] h-[462px]                                        -->
+  <!--        1920 -> w-[694px] h-[853px]                                        -->
+  <!-- Font:  768 -> 140px | 1280 & 1920 -> 220px                                -->
+  <!-- Textos no Desktop Centralizados, Palmore Regular (font-normal, sem shadow) -->
+  <!-- Textos auxiliares: Browalia                                               -->
+  <!-- Radius: 20px top-left, 0px top-right, 20px bottom-left, 20px bottom-right -->
+  <!-- ========================================================================= -->
+  <div class="hidden md:flex flex-row items-center justify-between w-full relative">
+    
+    <!-- LEFT COLUMN: Texts (Desktop: Centralizados, overlaps photo) -->
+    <div class="relative z-20 flex flex-col items-center text-center my-auto shrink-0 md:mr-[-160px] lg:mr-[-220px] 2xl:mr-[-320px] pointer-events-none">
+      
+      <!-- 1. CAMILA FERREIRA (1920: 36px) -->
+      <span class="text-[#fbc000] text-sm md:text-base lg:text-xl 2xl:text-[36px] font-semibold tracking-[0.25em] uppercase mb-3 lg:mb-5 select-none font-browalia pointer-events-auto leading-tight">
+        {pt.name}
+      </span>
+
+      <!-- 2. PRODUTORA AUDIOVISUAL (768px -> 140px | 1280/1920px -> 220px) - SEM SHADOW, Palmore regular (font-normal) -->
+      <h1 class="font-display text-[#fbc000] font-normal tracking-tight uppercase leading-[0.84] text-[100px] md:text-[140px] lg:text-[220px] 2xl:text-[220px] mb-5 lg:mb-8 select-none whitespace-normal sm:whitespace-nowrap pointer-events-auto">
+        <span class="lang-text lang-en block">
+          {en.title.includes(' ') ? en.title.split(' ')[0] : en.title}<br />{en.title.includes(' ') ? en.title.split(' ').slice(1).join(' ') : ''}
+        </span>
+        <span class="lang-text lang-pt hidden">
+          {pt.title.includes(' ') ? pt.title.split(' ')[0] : pt.title}<br />{pt.title.includes(' ') ? pt.title.split(' ').slice(1).join(' ') : ''}
+        </span>
+      </h1>
+
+      <!-- 3. A INTERSECÇÃO ENTRE DESIGN, ARTE E TECNOLOGIA. (1920: 36px) -->
+      <p class="text-[#fbc000] text-sm md:text-base lg:text-xl 2xl:text-[36px] font-semibold tracking-[0.2em] uppercase mb-3 lg:mb-5 select-none font-browalia pointer-events-auto leading-tight">
+        <span class="lang-text lang-en">{en.tagline}</span>
+        <span class="lang-text lang-pt hidden">{pt.tagline}</span>
+      </p>
+
+      <!-- 4. LUAS (Celestial Phase Indicators: ◑ ◯ ◐) - Centralizadas -->
+      <div class="flex items-center justify-center gap-2.5 mb-4 lg:mb-6 pointer-events-auto">
+        <!-- Moon 1: ◑ (Left half gold, right half dark) -->
+        <span class="w-3.5 h-3.5 lg:w-4 lg:h-4 2xl:w-6 2xl:h-6 rounded-full border border-[#fbc000] overflow-hidden relative flex">
+          <span class="w-1/2 h-full bg-[#fbc000]"></span>
+          <span class="w-1/2 h-full bg-[#232323]"></span>
+        </span>
+        <!-- Moon 2: ◯ (Hollow gold circle) -->
+        <span class="w-3.5 h-3.5 lg:w-4 lg:h-4 2xl:w-6 2xl:h-6 rounded-full border-2 border-[#fbc000] bg-transparent"></span>
+        <!-- Moon 3: ◐ (Left half dark, right half gold) -->
+        <span class="w-3.5 h-3.5 lg:w-4 lg:h-4 2xl:w-6 2xl:h-6 rounded-full border border-[#fbc000] overflow-hidden relative flex">
+          <span class="w-1/2 h-full bg-[#232323]"></span>
+          <span class="w-1/2 h-full bg-[#fbc000]"></span>
+        </span>
+      </div>
+
+      <!-- 5. CRIANDO EXPERIÊNCIAS VISUAIS... (1920: 20px) -->
+      <p class="text-[#fbc000]/80 text-xs md:text-sm lg:text-base 2xl:text-[20px] font-normal max-w-sm lg:max-w-md 2xl:max-w-xl leading-relaxed text-center font-browalia pointer-events-auto">
+        <span class="lang-text lang-en">{en.description}</span>
+        <span class="lang-text lang-pt hidden">{pt.description}</span>
+      </p>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Photo -->
+    <!-- Dimensions: 768px: w-[317px] h-[389px] | 1280px: w-[376px] h-[462px] | 1920px: w-[694px] h-[853px] -->
+    <!-- Radius: 20px top-left, 0px top-right, 20px bottom-left, 20px bottom-right -->
+    <div class="relative z-10 shrink-0 ml-auto flex justify-end items-center">
+      <div class="relative w-[317px] h-[389px] md:w-[317px] md:h-[389px] lg:w-[376px] lg:h-[462px] 2xl:w-[667px] 2xl:h-[819px] rounded-tl-[20px] rounded-tr-none rounded-bl-[20px] rounded-br-[20px] overflow-hidden bg-neutral-900 border border-neutral-800/80">
+        <img
+          src={heroPortrait}
+          alt="Camila Ferreira - Audiovisual Producer"
+          class="w-full h-full object-cover object-center"
+          loading="eager"
+        />
+      </div>
+    </div>
+
+  </div>
+
+</section>

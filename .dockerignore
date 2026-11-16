@@ -1,0 +1,8 @@
+node_modules
+dist
+.playwright-mcp
+.git
+.github
+backend
+cms
+npm-debug.log

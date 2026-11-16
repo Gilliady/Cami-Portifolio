@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Build & Framework Cache
+dist/
+.astro/
+backend/dist/
+backend/build/
+backend/.strapi/
+backend/.cache/
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Strapi Local Database & Uploads
+backend/.tmp/
+backend/public/uploads/
+
+# Logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Local Debug / Playwright Artifacts
+.playwright-mcp/
+/scratch_*.png
+/*_about.png
+/*_contact.png
+/*_hero.png
+/*_projects.png
+/about_slice_*.png
+/contact_p*.png
+/sec3_p*.png
+/sombras_*.png
+/projects_*.png
