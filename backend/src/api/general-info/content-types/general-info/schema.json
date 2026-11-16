@@ -90,6 +90,11 @@
       "multiple": false,
       "allowedTypes": ["images"]
     },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
     "linkedinUrl": {
       "type": "string"
     },

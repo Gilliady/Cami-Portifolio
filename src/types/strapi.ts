@@ -63,6 +63,7 @@ export interface StrapiGeneralInfo {
   heroPortrait?: StrapiMedia;
   aboutPortrait?: StrapiMedia;
   contactPortrait?: StrapiMedia;
+  favicon?: StrapiMedia;
   stats: StrapiStat[];
   linkedinUrl?: string;
   whatsappUrl?: string;

@@ -169,6 +169,7 @@ export async function getPortfolioContent(locale: 'pt' | 'en' = 'pt'): Promise<C
 
   return {
     lang: locale,
+    favicon: getStrapiMediaUrl(data.favicon, ''),
     hero: {
       tagline: data.heroTagline || fallback.hero.tagline,
       name: data.heroName || fallback.hero.name,

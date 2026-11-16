@@ -13,7 +13,7 @@ const contentPt = await getPortfolioContent('pt');
 const contentEn = await getPortfolioContent('en');
 ---
 
-<Layout>
+<Layout favicon={contentPt.favicon || contentEn.favicon}>
   <Header />
 
   <main class="w-full overflow-hidden">

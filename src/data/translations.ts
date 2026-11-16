@@ -18,6 +18,7 @@ export interface ProjectItem {
 
 export interface ContentData {
   lang: 'pt' | 'en';
+  favicon?: string;
   hero: {
     tagline: string;
     name: string;
