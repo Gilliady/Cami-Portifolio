@@ -72,7 +72,7 @@ export async function fetchStrapi<T>(
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    const timeoutId = setTimeout(() => controller.abort(), 1200);
 
     const response = await fetch(url, {
       headers,
@@ -106,8 +106,8 @@ export async function getPortfolioProjects(locale: 'pt' | 'en' = 'pt'): Promise<
     'pagination[pageSize]': '100',
   });
 
-  // Fallback to query without locale if Strapi doesn't have i18n installed/configured
-  if (!strapiData || !strapiData.data || strapiData.data.length === 0) {
+  // Fallback to query without locale only if Strapi responded with empty array
+  if (strapiData && (!strapiData.data || strapiData.data.length === 0)) {
     strapiData = await fetchStrapi<StrapiResponse<StrapiProject[]>>('projects', {
       populate: '*',
       sort: 'order:asc',
@@ -154,8 +154,8 @@ export async function getPortfolioContent(locale: 'pt' | 'en' = 'pt'): Promise<C
     locale,
   });
 
-  // Fallback to query without locale if Strapi doesn't have i18n configured
-  if (!strapiData || !strapiData.data) {
+  // Fallback to query without locale only if Strapi responded with null data
+  if (strapiData && !strapiData.data) {
     strapiData = await fetchStrapi<StrapiResponse<StrapiGeneralInfo>>('general-info', {
       populate: '*',
     });
@@ -175,13 +175,13 @@ export async function getPortfolioContent(locale: 'pt' | 'en' = 'pt'): Promise<C
       name: data.heroName || fallback.hero.name,
       title: data.heroTitle || fallback.hero.title,
       description: data.heroDescription || fallback.hero.description,
-      portrait: getStrapiMediaUrl(data.heroPortrait, '/images/hero_camila.png'),
+      portrait: getStrapiMediaUrl(data.heroPortrait, '/images/hero_camila.webp'),
     },
     about: {
       heading: data.aboutHeading || fallback.about.heading,
       paragraphs: data.aboutBio ? data.aboutBio.split('\n\n').filter(Boolean) : fallback.about.paragraphs,
       stats: data.stats && data.stats.length > 0 ? data.stats : fallback.about.stats,
-      portrait: getStrapiMediaUrl(data.aboutPortrait, '/images/about_camila.png'),
+      portrait: getStrapiMediaUrl(data.aboutPortrait, '/images/about_camila.webp'),
     },
     projects: {
       heading: fallback.projects.heading,
@@ -189,7 +189,7 @@ export async function getPortfolioContent(locale: 'pt' | 'en' = 'pt'): Promise<C
     },
     contact: {
       heading: fallback.contact.heading,
-      portrait: getStrapiMediaUrl(data.contactPortrait, '/images/contact_camila.png'),
+      portrait: getStrapiMediaUrl(data.contactPortrait, '/images/contact_camila.webp'),
       form: fallback.contact.form,
       socials: {
         linkedin: data.linkedinUrl || fallback.contact.socials.linkedin,

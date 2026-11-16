@@ -23,7 +23,7 @@ const en = contentEn || {
   description: 'Creating visual experiences for a digital world. Unleashing your project’s full potential.',
 };
 
-const heroPortrait = pt.portrait || en.portrait || '/images/hero_camila.png';
+const heroPortrait = pt.portrait || en.portrait || '/images/hero_camila.webp';
 ---
 
 <section id="hero" class="relative w-full pt-16 sm:pt-20 md:pt-20 lg:pt-24 pb-12 sm:pb-16 px-2 sm:px-6 md:px-10 lg:px-16 xl:px-24 max-w-[1920px] mx-auto overflow-hidden">
@@ -39,6 +39,10 @@ const heroPortrait = pt.portrait || en.portrait || '/images/hero_camila.png';
       <img
         src={heroPortrait}
         alt="Camila Ferreira - Audiovisual Producer"
+        width="667"
+        height="819"
+        fetchpriority="high"
+        decoding="async"
         class="absolute inset-0 w-full h-full object-cover object-top pointer-events-none select-none"
         loading="eager"
       />
@@ -163,6 +167,10 @@ const heroPortrait = pt.portrait || en.portrait || '/images/hero_camila.png';
         <img
           src={heroPortrait}
           alt="Camila Ferreira - Audiovisual Producer"
+          width="667"
+          height="819"
+          fetchpriority="high"
+          decoding="async"
           class="w-full h-full object-cover object-center"
           loading="eager"
         />

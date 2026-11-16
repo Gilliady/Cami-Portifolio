@@ -9,45 +9,91 @@ interface Props {
 
 const {
   title = 'Camila Ferreira | Audiovisual Producer',
-  description = 'Creating visual experiences for a digital world. Audiovisual Producer, Animation, Cinematography and Direction.',
+  description = 'Camila Ferreira — Produtora Audiovisual, Direção de Arte, Animação 2D, Stop Motion, Motion Design, Fotografia e Design Digital.',
   favicon,
 } = Astro.props;
 
 const defaultFavicon = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>";
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'Camila Ferreira',
+    jobTitle: ['Audiovisual Producer', 'Produtora Audiovisual', 'Motion Designer', 'Art Director'],
+    url: 'https://camiswd.com/',
+    image: 'https://camiswd.com/images/hero_camila.webp',
+    description:
+      'Produtora audiovisual, diretora de arte e designer multidisciplinar com mais de 10 anos de experiência, +200 entregas e 9 prêmios e nomeações em festivais.',
+    knowsAbout: [
+      'Audiovisual Production',
+      '2D Animation',
+      'Stop Motion',
+      'Motion Graphics',
+      'Cinematography',
+      'Art Direction',
+      'Webdesign',
+      'Graphic Design',
+    ],
+    email: 'mailto:contato@camilaferreira.art',
+  },
+};
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth bg-[#232323]">
+<html lang="pt-BR" class="scroll-smooth bg-[#232323]">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href={favicon || defaultFavicon} />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Primary Meta Tags -->
+    <!-- Primary Meta Tags & Canonical -->
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://camiswd.com/" />
+    <link rel="alternate" hreflang="pt-BR" href="https://camiswd.com/" />
+    <link rel="alternate" hreflang="en" href="https://camiswd.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://camiswd.com/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://camiswd.com/" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/images/hero_camila.png" />
+    <meta property="og:image" content="https://camiswd.com/images/hero_camila.webp" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="/images/hero_camila.png" />
+    <meta property="twitter:image" content="https://camiswd.com/images/hero_camila.webp" />
 
-    <!-- Google Fonts Preconnect and Stylesheets -->
+    <!-- Preload critical Hero LCP image & Display font -->
+    <link rel="preload" as="image" href="/images/hero_camila.webp" fetchpriority="high" />
+    <link rel="preload" as="font" type="font/ttf" href="/fonts/PalmoreRegular.ttf" crossorigin />
+
+    <!-- Google Fonts (Cabin + Montserrat only) loaded non-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Cinzel+Decorative:wght@700;900&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <!-- Structured Data for Search Engines & AI Crawlers -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
   <body class="min-h-screen bg-[#232323] text-white selection:bg-[#fbc000] selection:text-black">
     <slot />

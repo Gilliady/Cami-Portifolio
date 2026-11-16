@@ -31,6 +31,7 @@ Thumbs.db
 # Local Debug / Playwright Artifacts
 .playwright-mcp/
 /scratch_*.png
+/scratch_*.json
 /*_about.png
 /*_contact.png
 /*_hero.png
