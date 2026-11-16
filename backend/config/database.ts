@@ -3,7 +3,7 @@ import type { Core } from '@strapi/strapi';
 import { isDatabaseClientKind } from '@strapi/database';
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+  const client = env('DATABASE_CLIENT', env('DB_HOST') ? 'mysql' : 'sqlite');
 
   if (!isDatabaseClientKind(client)) {
     throw new Error(
@@ -15,11 +15,11 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
     mysql: {
       client: 'mysql',
       connection: {
-        host: env('DATABASE_HOST', 'localhost'),
-        port: env.int('DATABASE_PORT', 3306),
-        database: env('DATABASE_NAME', 'strapi'),
-        user: env('DATABASE_USERNAME', 'strapi'),
-        password: env('DATABASE_PASSWORD', 'strapi'),
+        host: env('DATABASE_HOST', env('DB_HOST', 'localhost')),
+        port: env.int('DATABASE_PORT', env.int('DB_PORT', 3306)),
+        database: env('DATABASE_NAME', env('DB_NAME', 'strapi')),
+        user: env('DATABASE_USERNAME', env('DB_USER', 'strapi')),
+        password: env('DATABASE_PASSWORD', env('DB_PASSWORD', 'strapi')),
         ssl: env.bool('DATABASE_SSL', false) && {
           key: env('DATABASE_SSL_KEY', undefined),
           cert: env('DATABASE_SSL_CERT', undefined),
