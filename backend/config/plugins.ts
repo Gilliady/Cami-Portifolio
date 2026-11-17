@@ -40,6 +40,24 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       },
     },
   },
+  email: {
+    config: {
+      provider: 'nodemailer',
+      providerOptions: {
+        host: env('SMTP_HOST', 'smtp.hostinger.com'),
+        port: env.int('SMTP_PORT', 465),
+        secure: env.bool('SMTP_SECURE', true),
+        auth: {
+          user: env('SMTP_USER', 'contact@camiswd.com'),
+          pass: env('SMTP_PASS'),
+        },
+      },
+      settings: {
+        defaultFrom: env('SMTP_FROM', 'contact@camiswd.com'),
+        defaultReplyTo: env('SMTP_REPLY_TO', 'contact@camiswd.com'),
+      },
+    },
+  },
 });
 
 export default config;
