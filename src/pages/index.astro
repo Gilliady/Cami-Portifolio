@@ -128,7 +128,18 @@ const contentEn = await getPortfolioContent('en');
     });
 
     // Scroll-reveal entrance animations for sections
-    const revealEls = document.querySelectorAll('.reveal-section');
+    const revealEls = Array.from(document.querySelectorAll('.reveal-section'));
+    const checkVisible = () => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      revealEls.forEach((el) => {
+        if (el.classList.contains('is-visible')) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= vh - 60) {
+          el.classList.add('is-visible');
+        }
+      });
+    };
+
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -139,11 +150,14 @@ const contentEn = await getPortfolioContent('en');
             }
           });
         },
-        { threshold: 0.12 }
+        { threshold: 0.01, rootMargin: '0px 0px -60px 0px' }
       );
       revealEls.forEach((el) => observer.observe(el));
     } else {
       revealEls.forEach((el) => el.classList.add('is-visible'));
     }
+
+    window.addEventListener('scroll', checkVisible, { passive: true });
+    checkVisible();
   </script>
 </Layout>
