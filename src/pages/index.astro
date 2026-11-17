@@ -25,6 +25,21 @@ const contentEn = await getPortfolioContent('en');
 
   <ProjectModal />
 
+  <!-- Minimalist Scroll-Down Double-V Arrow (2 wide-open Vs, top smaller than bottom) -->
+  <button
+    id="scroll-next-btn"
+    type="button"
+    aria-label="Scroll to next section"
+    class="fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-40 p-2 text-[#fbc000]/80 hover:text-[#fbc000] transition-opacity duration-300 cursor-pointer animate-bounce focus:outline-none"
+  >
+    <svg width="32" height="24" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <!-- Top smaller, wide-open V -->
+      <path d="M9 4L16 10L23 4" opacity="0.7" />
+      <!-- Bottom larger, wide-open V -->
+      <path d="M4 11L16 20L28 11" />
+    </svg>
+  </button>
+
   <!-- Language switcher & form interaction client script -->
   <script>
     type Language = 'en' | 'pt';
@@ -159,5 +174,35 @@ const contentEn = await getPortfolioContent('en');
 
     window.addEventListener('scroll', checkVisible, { passive: true });
     checkVisible();
+
+    // Minimalist Scroll-Next-Section Button
+    const scrollNextBtn = document.getElementById('scroll-next-btn');
+    const sections = ['hero', 'about', 'projects', 'contact']
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    function updateScrollArrowVisibility() {
+      if (!scrollNextBtn || sections.length === 0) return;
+      const lastSection = sections[sections.length - 1];
+      const rect = lastSection.getBoundingClientRect();
+      // Hide arrow once the last section (#contact) is mostly in view
+      if (rect.top <= window.innerHeight * 0.45) {
+        scrollNextBtn.classList.add('opacity-0', 'pointer-events-none');
+      } else {
+        scrollNextBtn.classList.remove('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    scrollNextBtn?.addEventListener('click', () => {
+      const scrollY = window.scrollY;
+      const next = sections.find((sec) => sec.offsetTop > scrollY + 40);
+      if (next) {
+        next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    window.addEventListener('scroll', updateScrollArrowVisibility, { passive: true });
+    window.addEventListener('resize', updateScrollArrowVisibility, { passive: true });
+    updateScrollArrowVisibility();
   </script>
 </Layout>
