@@ -193,12 +193,47 @@ const contentEn = await getPortfolioContent('en');
       }
     }
 
+    function smoothScrollTo(targetY: number, duration = 850) {
+      const startY = window.scrollY;
+      const diff = targetY - startY;
+      if (Math.abs(diff) < 2) return;
+      let startTime: number | null = null;
+
+      const easeInOutCubic = (t: number) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      function step(timestamp: number) {
+        if (startTime === null) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, startY + diff * easeInOutCubic(progress));
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
     scrollNextBtn?.addEventListener('click', () => {
       const scrollY = window.scrollY;
       const next = sections.find((sec) => sec.offsetTop > scrollY + 40);
       if (next) {
-        next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        smoothScrollTo(next.offsetTop, 850);
       }
+    });
+
+    // Apply silky smooth scroll to anchor links (e.g. Back to top)
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        if (!href || href === '#') return;
+        const target = document.querySelector(href) as HTMLElement | null;
+        if (target) {
+          e.preventDefault();
+          smoothScrollTo(target.offsetTop, 850);
+        }
+      });
     });
 
     window.addEventListener('scroll', updateScrollArrowVisibility, { passive: true });
