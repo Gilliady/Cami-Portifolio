@@ -22,20 +22,20 @@ const contactEmail = contentPt?.socials?.email || contentEn?.socials?.email || '
     <!-- Left Column: Overlapping Header + Social Icons + Chess Portrait -->
     <div class="flex flex-col w-full">
       <!-- Header with Social Icons on the left, overlapping top of portrait -->
-      <div class="relative z-20 flex items-center gap-1.5 sm:gap-3 lg:gap-4 -mb-[0.18em] text-[52px] sm:text-[80px] md:text-[100px] lg:text-[135px] xl:text-[165px] 2xl:text-[185px] whitespace-nowrap">
+      <div class="relative z-20 flex items-end gap-1.5 sm:gap-3 lg:gap-4 -mb-[0.18em] text-[52px] sm:text-[80px] md:text-[100px] lg:text-[135px] xl:text-[165px] 2xl:text-[185px] whitespace-nowrap">
         <h2 class="font-display text-[#fbc000] font-normal uppercase text-[1em] leading-[0.78] tracking-tight select-none">
           <span class="lang-text lang-en">CONTACT</span>
           <span class="lang-text lang-pt hidden">CONTATO</span>
         </h2>
 
-        <!-- Social Icons Column: exact same height (0.78em) as CONTACT/CONTATO -->
-        <div class="flex flex-col justify-between items-center h-[0.78em] shrink-0 text-[#fbc000]">
+        <!-- Social Icons Column: exact cap-to-baseline height (0.54em) of CONTACT/CONTATO -->
+        <div class="flex flex-col justify-between items-center h-[0.54em] mb-[0.035em] shrink-0 text-[#fbc000]">
           <!-- LinkedIn -->
           <a
             href={linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="w-[0.21em] h-[0.21em] hover:text-white transition-colors duration-200 block"
+            class="w-[0.15em] h-[0.15em] hover:text-white transition-colors duration-200 block"
             aria-label="LinkedIn Profile"
           >
             <svg class="w-full h-full fill-current block" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@ const contactEmail = contentPt?.socials?.email || contentEn?.socials?.email || '
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="w-[0.21em] h-[0.21em] hover:text-white transition-colors duration-200 block"
+            class="w-[0.15em] h-[0.15em] hover:text-white transition-colors duration-200 block"
             aria-label="WhatsApp Contact"
           >
             <svg class="w-full h-full fill-current block" viewBox="0 0 24 24">
@@ -59,11 +59,11 @@ const contactEmail = contentPt?.socials?.email || contentEn?.socials?.email || '
           <!-- Email -->
           <a
             href={contactEmail}
-            class="w-[0.21em] h-[0.21em] hover:text-white transition-colors duration-200 block"
+            class="w-[0.15em] h-[0.15em] hover:text-white transition-colors duration-200 block"
             aria-label="Send Email"
           >
             <svg class="w-full h-full fill-current block" viewBox="0 0 24 24">
-              <path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l9.518 7.713 9.518-7.713v11.817h-19.036z"/>
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
             </svg>
           </a>
         </div>
