@@ -46,14 +46,14 @@ const aboutPortrait = pt.portrait || en.portrait || '/images/about_camila.webp';
   <!-- MOBILE LAYOUT (< 768px / 320px)                                           -->
   <!-- SOBRE/ABOUT sobrepõe o topo da imagem; Lorem ipsum sobrepõe a base escura -->
   <!-- ========================================================================= -->
-  <div class="flex flex-col items-center px-3 md:hidden">
-    <div class="relative w-full max-w-[295px] flex flex-col items-center">
+  <div class="flex flex-col items-center px-4 md:hidden">
+    <div class="relative w-full max-w-[360px] sm:max-w-[420px] flex flex-col items-center">
       
       <!-- Layered Image + Overlapping Texts -->
       <div class="relative w-full flex flex-col items-center pb-4">
         
-        <!-- 1. Image About: 283x376 rounded-[41px] -->
-        <div class="w-[283px] h-[376px] rounded-[41px] overflow-hidden flex items-center justify-center mt-5">
+        <!-- 1. Image About: scaled proportionally for mobile -->
+        <div class="w-[320px] h-[425px] sm:w-[370px] sm:h-[490px] rounded-[41px] overflow-hidden flex items-center justify-center mt-6">
           <img
             src={aboutPortrait}
             alt="Camila Ferreira - Adobe Creative Suite profile"
@@ -62,14 +62,14 @@ const aboutPortrait = pt.portrait || en.portrait || '/images/about_camila.webp';
           />
         </div>
 
-        <!-- 2. Overlapping Heading: ABOUT / SOBRE (130px, Palmore, 1px #FFC300 stroke) -->
-        <h2 class="font-display text-outline-gold font-normal uppercase text-[130px] leading-[0.78] tracking-tight select-none absolute top-0 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap pointer-events-none">
+        <!-- 2. Overlapping Heading: ABOUT / SOBRE -->
+        <h2 class="font-display text-outline-gold font-normal uppercase text-[148px] sm:text-[175px] leading-[0.78] tracking-tight select-none absolute top-0 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap pointer-events-none">
           <span class="lang-text lang-en">{en.heading}</span>
           <span class="lang-text lang-pt hidden">{pt.heading}</span>
         </h2>
 
-        <!-- 3. Overlapping Bio Text over dark lower area of image: w-[242px], 10px / 13px -->
-        <div class="relative z-10 -mt-[115px] w-[242px] font-objective font-normal text-white text-[10px] leading-[13px] text-justify">
+        <!-- 3. Overlapping Bio Text over dark lower area of image -->
+        <div class="relative z-10 -mt-[130px] sm:-mt-[150px] w-[290px] sm:w-[340px] font-objective font-normal text-white text-[12px] sm:text-[13px] leading-[16px] sm:leading-[18px] text-justify">
           <div class="lang-text lang-en">
             <p>{en.paragraphs[0]}</p>
           </div>
@@ -80,24 +80,24 @@ const aboutPortrait = pt.portrait || en.portrait || '/images/about_camila.webp';
 
       </div>
 
-      <!-- 4. Horizontal Stats Pill Bar: 295x73 rounded-[28px] -->
-      <div class="w-full h-[73px] bg-[#FFC400] text-black rounded-[28px] right-bar-shadow px-3 flex items-center justify-between mt-1 font-cabin">
+      <!-- 4. Horizontal Stats Pill Bar -->
+      <div class="w-full min-h-[84px] sm:min-h-[92px] py-2.5 bg-[#FFC400] text-black rounded-[28px] right-bar-shadow px-3.5 flex items-center justify-between mt-2 font-cabin">
         <!-- EN Mobile Stats -->
-        <div class="lang-text lang-en grid grid-cols-4 gap-1 w-full text-center">
+        <div class="lang-text lang-en grid grid-cols-4 gap-1.5 w-full text-center">
           {en.stats.map((s) => (
             <div class="flex flex-col items-center justify-center">
-              <span class="font-cabin font-bold text-[24px] leading-none">{s.number}</span>
-              <span class="font-bubbleboddy font-extralight text-[10px] leading-[10px] lowercase mt-0.5">{s.label}</span>
+              <span class="font-cabin font-bold text-[26px] sm:text-[30px] leading-none">{s.number}</span>
+              <span class="font-bubbleboddy font-extralight text-[11px] sm:text-[12px] leading-[12px] lowercase mt-1">{s.label}</span>
             </div>
           ))}
         </div>
 
         <!-- PT Mobile Stats -->
-        <div class="lang-text lang-pt hidden grid grid-cols-4 gap-1 w-full text-center">
+        <div class="lang-text lang-pt hidden grid grid-cols-4 gap-1.5 w-full text-center">
           {pt.stats.map((s) => (
             <div class="flex flex-col items-center justify-center">
-              <span class="font-cabin font-bold text-[24px] leading-none">{s.number}</span>
-              <span class="font-bubbleboddy font-extralight text-[10px] leading-[10px] lowercase mt-0.5">{s.label}</span>
+              <span class="font-cabin font-bold text-[26px] sm:text-[30px] leading-none">{s.number}</span>
+              <span class="font-bubbleboddy font-extralight text-[11px] sm:text-[12px] leading-[12px] lowercase mt-1">{s.label}</span>
             </div>
           ))}
         </div>
