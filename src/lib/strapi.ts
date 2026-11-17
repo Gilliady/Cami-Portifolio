@@ -99,12 +99,23 @@ export async function fetchStrapi<T>(
  * Fetches Projects for a given locale with fallback to static portfolio data
  */
 export async function getPortfolioProjects(locale: 'pt' | 'en' = 'pt'): Promise<ProjectItem[]> {
+  const strapiLocale = locale === 'pt' ? 'pt-BR' : locale;
   let strapiData = await fetchStrapi<StrapiResponse<StrapiProject[]>>('projects', {
     populate: '*',
-    locale,
+    locale: strapiLocale,
     sort: 'order:asc',
     'pagination[pageSize]': '100',
   });
+
+  // Fallback to 'pt' if 'pt-BR' has no entries yet
+  if (locale === 'pt' && strapiData && (!strapiData.data || strapiData.data.length === 0)) {
+    strapiData = await fetchStrapi<StrapiResponse<StrapiProject[]>>('projects', {
+      populate: '*',
+      locale: 'pt',
+      sort: 'order:asc',
+      'pagination[pageSize]': '100',
+    });
+  }
 
   // Fallback to query without locale only if Strapi responded with empty array
   if (strapiData && (!strapiData.data || strapiData.data.length === 0)) {
@@ -148,11 +159,20 @@ export async function getPortfolioProjects(locale: 'pt' | 'en' = 'pt'): Promise<
  */
 export async function getPortfolioContent(locale: 'pt' | 'en' = 'pt'): Promise<ContentData> {
   const fallback = defaultContent[locale];
+  const strapiLocale = locale === 'pt' ? 'pt-BR' : locale;
 
   let strapiData = await fetchStrapi<StrapiResponse<StrapiGeneralInfo>>('general-info', {
     populate: '*',
-    locale,
+    locale: strapiLocale,
   });
+
+  // Fallback to 'pt' if 'pt-BR' has no entry yet
+  if (locale === 'pt' && strapiData && !strapiData.data) {
+    strapiData = await fetchStrapi<StrapiResponse<StrapiGeneralInfo>>('general-info', {
+      populate: '*',
+      locale: 'pt',
+    });
+  }
 
   // Fallback to query without locale only if Strapi responded with null data
   if (strapiData && !strapiData.data) {
