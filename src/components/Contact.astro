@@ -153,10 +153,14 @@ const contactEmail = contentPt?.socials?.email || contentEn?.socials?.email || '
   </div>
 
   <!-- Bottom Footer Copyright & Anchor -->
-  <div class="mt-14 sm:mt-20 pt-6 sm:pt-8 border-t border-neutral-800/60 flex flex-col sm:flex-row items-center justify-between text-[10px] sm:text-xs text-neutral-500 gap-3">
-    <p>© 2026 Camila Ferreira. All rights reserved.</p>
-    <a href="#hero" class="text-neutral-400 hover:text-[#fbc000] transition-colors flex items-center gap-1.5">
-      <span>Back to top</span>
+  <div class="mt-14 sm:mt-20 pt-6 sm:pt-8 border-t border-neutral-800/60 flex flex-col sm:flex-row items-center justify-between font-montserrat text-[11px] sm:text-xs leading-normal text-neutral-500 gap-3">
+    <p>
+      <span class="lang-text lang-en">© 2026 Camila Ferreira. All rights reserved.</span>
+      <span class="lang-text lang-pt hidden">© 2026 Camila Ferreira. Todos os direitos reservados.</span>
+    </p>
+    <a href="#hero" class="text-neutral-400 hover:text-[#fbc000] transition-colors flex items-center gap-1.5 leading-normal">
+      <span class="lang-text lang-en">Back to top</span>
+      <span class="lang-text lang-pt hidden">Voltar ao topo</span>
       <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
       </svg>
