@@ -75,19 +75,23 @@ const aboutPortrait = pt.portrait || en.portrait || '/images/about_camila.webp';
         </h2>
 
         <!-- 3. Overlapping Bio Text over dark lower area of image -->
-        <div class="relative z-10 -mt-[130px] sm:-mt-[150px] w-[290px] sm:w-[340px] font-objective font-normal text-white text-[12px] sm:text-[13px] leading-[16px] sm:leading-[18px] text-justify">
-          <div class="lang-text lang-en">
-            <p>{en.paragraphs[0]}</p>
+        <div class="relative z-20 -mt-[110px] sm:-mt-[125px] min-h-[110px] sm:min-h-[125px] pt-3 w-[290px] sm:w-[340px] font-objective font-normal text-white text-[12px] sm:text-[13px] leading-[16px] sm:leading-[18px] text-justify">
+          <div class="lang-text lang-en flex flex-col gap-2">
+            {en.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
           </div>
-          <div class="lang-text lang-pt hidden">
-            <p>{pt.paragraphs[0]}</p>
+          <div class="lang-text lang-pt hidden flex flex-col gap-2">
+            {pt.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
           </div>
         </div>
 
       </div>
 
       <!-- 4. Horizontal Stats Pill Bar -->
-      <div class="w-full min-h-[84px] sm:min-h-[92px] py-2.5 bg-[#FFC400] text-black rounded-[28px] right-bar-shadow px-3.5 flex items-center justify-between mt-2 font-cabin">
+      <div class="relative z-20 w-full min-h-[84px] sm:min-h-[92px] py-2.5 bg-[#FFC400] text-black rounded-[28px] right-bar-shadow px-3.5 flex items-center justify-between mt-2 font-cabin">
         <!-- EN Mobile Stats -->
         <div class="lang-text lang-en grid grid-cols-4 gap-1.5 w-full text-center">
           {en.stats.map((s) => (
