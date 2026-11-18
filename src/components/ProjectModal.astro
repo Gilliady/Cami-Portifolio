@@ -36,7 +36,7 @@
         class="w-full h-full object-contain"
       />
 
-      <!-- Video Player (shown when project has video) -->
+      <!-- Video Player (direct MP4/WebM) -->
       <video
         id="modal-video"
         controls
@@ -44,6 +44,16 @@
         class="hidden w-full h-full object-contain bg-black"
         src=""
       ></video>
+
+      <!-- Embedded Video Player (YouTube / Shorts / Vimeo) -->
+      <iframe
+        id="modal-iframe"
+        class="hidden w-full h-full border-0 bg-black"
+        src=""
+        title="Project video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
     </div>
 
     <!-- Modal Content Description -->
@@ -62,9 +72,31 @@
   const closeBtn = document.getElementById('modal-close-btn');
   const modalImg = document.getElementById('modal-image') as HTMLImageElement;
   const modalVideo = document.getElementById('modal-video') as HTMLVideoElement;
+  const modalIframe = document.getElementById('modal-iframe') as HTMLIFrameElement;
   const modalTitle = document.getElementById('modal-title');
   const modalCategory = document.getElementById('modal-category');
   const modalDesc = document.getElementById('modal-desc');
+
+  function getEmbedVideoUrl(rawUrl: string): string | null {
+    const url = rawUrl.trim();
+    if (!url) return null;
+
+    // YouTube: watch?v=, shorts/, youtu.be/, embed/
+    const ytMatch = url.match(
+      /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
+    );
+    if (ytMatch?.[1]) {
+      return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
+    }
+
+    // Vimeo: vimeo.com/<id> or player.vimeo.com/video/<id>
+    const vimeoMatch = url.match(/(?:player\.)?vimeo\.com\/(?:video\/)?(\d+)/);
+    if (vimeoMatch?.[1]) {
+      return `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
+    }
+
+    return null;
+  }
 
   function openModal(card: HTMLElement) {
     if (!modal || !modalImg || !modalTitle || !modalCategory || !modalDesc || !modalContainer) return;
@@ -74,19 +106,37 @@
     const img = card.getAttribute('data-project-img') || '';
     const desc = card.getAttribute('data-project-desc') || '';
     const video = card.getAttribute('data-project-video') || '';
+    const embedUrl = getEmbedVideoUrl(video);
 
     modalTitle.textContent = title;
     modalCategory.textContent = category;
     modalDesc.textContent = desc;
 
-    if (video) {
+    if (embedUrl && modalIframe) {
       modalImg.classList.add('hidden');
+      if (modalVideo) {
+        modalVideo.pause();
+        modalVideo.src = '';
+        modalVideo.classList.add('hidden');
+      }
+      modalIframe.src = embedUrl;
+      modalIframe.classList.remove('hidden');
+    } else if (video) {
+      modalImg.classList.add('hidden');
+      if (modalIframe) {
+        modalIframe.src = '';
+        modalIframe.classList.add('hidden');
+      }
       if (modalVideo) {
         modalVideo.src = video;
         modalVideo.classList.remove('hidden');
         modalVideo.play().catch(() => {});
       }
     } else {
+      if (modalIframe) {
+        modalIframe.src = '';
+        modalIframe.classList.add('hidden');
+      }
       if (modalVideo) {
         modalVideo.pause();
         modalVideo.src = '';
@@ -108,6 +158,11 @@
     if (modalVideo) {
       modalVideo.pause();
       modalVideo.src = '';
+      modalVideo.classList.add('hidden');
+    }
+    if (modalIframe) {
+      modalIframe.src = '';
+      modalIframe.classList.add('hidden');
     }
     modal.classList.add('opacity-0', 'pointer-events-none');
     modal.classList.remove('opacity-100');

@@ -55,7 +55,7 @@ const contentEn = await getPortfolioContent('en');
 
       // Update button active states
       if (lang === 'en') {
-        btnEn?.classList.remove('text-neutral-400', 'hover:text-white');
+        btnEn?.classList.remove('text-neutral-300', 'text-neutral-400', 'hover:text-white');
         btnEn?.classList.add('bg-[#fbc000]', 'text-black', 'shadow-sm');
         btnEn?.querySelector('.check-icon')?.classList.remove('hidden');
 
@@ -63,7 +63,7 @@ const contentEn = await getPortfolioContent('en');
         btnPt?.classList.add('text-neutral-400', 'hover:text-white');
         btnPt?.querySelector('.check-icon')?.classList.add('hidden');
       } else {
-        btnPt?.classList.remove('text-neutral-400', 'hover:text-white');
+        btnPt?.classList.remove('text-neutral-300', 'text-neutral-400', 'hover:text-white');
         btnPt?.classList.add('bg-[#fbc000]', 'text-black', 'shadow-sm');
         btnPt?.querySelector('.check-icon')?.classList.remove('hidden');
 
