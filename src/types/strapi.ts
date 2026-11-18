@@ -33,6 +33,7 @@ export interface StrapiProject {
   category: string;
   description?: string;
   order?: number;
+  type?: 'image' | 'video' | 'gallery' | 'galery';
   hasPlay?: boolean;
   hasAwards?: boolean;
   inAudiovisual?: boolean;
@@ -42,6 +43,7 @@ export interface StrapiProject {
   videoUrl?: string; // External video link (Vimeo, YouTube, Cloudflare Stream)
   videoFile?: StrapiMedia; // Direct uploaded video file (MP4, WebM)
   image?: StrapiMedia; // Cover / thumbnail image uploaded in Strapi
+  gallery?: StrapiMedia[] | { data?: StrapiMedia[] };
   locale?: string;
 }
 

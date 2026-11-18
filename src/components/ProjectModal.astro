@@ -1,10 +1,10 @@
 ---
-// Project Modal / Lightbox for viewing work details & video players
+// Project Modal / Lightbox for viewing video, single image, or gallery bento box
 ---
 
 <div
   id="project-modal"
-  class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300"
+  class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300"
   role="dialog"
   aria-modal="true"
   aria-label="Project details"
@@ -12,13 +12,13 @@
   <!-- Modal Card Frame -->
   <div
     id="modal-container"
-    class="relative w-full max-w-3xl bg-[#1c1c1c] rounded-3xl border border-neutral-700/80 shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col"
+    class="relative w-full max-w-5xl max-h-[92vh] bg-[#161616] rounded-2xl sm:rounded-3xl border border-neutral-700/80 shadow-2xl overflow-hidden transform scale-[0.94] translate-y-3 transition-[max-width,width,height,transform,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col"
   >
     <!-- Close Button -->
     <button
       id="modal-close-btn"
       type="button"
-      class="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/60 hover:bg-[#fbc000] text-white hover:text-black flex items-center justify-center transition-colors duration-200 cursor-pointer shadow-lg"
+      class="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/75 hover:bg-[#fbc000] text-white hover:text-black border border-white/15 flex items-center justify-center transition-colors duration-200 cursor-pointer shadow-lg"
       aria-label="Close dialog"
     >
       <svg class="w-5 h-5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
@@ -26,49 +26,134 @@
       </svg>
     </button>
 
-    <!-- Media Frame (Image or Video) -->
-    <div class="relative w-full aspect-[16/9] sm:aspect-[16/10] bg-black overflow-hidden flex items-center justify-center">
-      <!-- Image Preview -->
-      <img
-        id="modal-image"
-        src=""
-        alt="Project Preview"
-        class="w-full h-full object-contain"
-      />
+    <!-- Layout Body: Video (stacked) OR Image/Gallery (2-column split on md+) -->
+    <div id="modal-layout" class="flex flex-col md:flex-row w-full overflow-y-auto md:overflow-hidden">
+      <!-- Media Stage (Left column for image/gallery, Full top for video) -->
+      <div
+        id="modal-media-stage"
+        class="relative w-full md:w-[58%] aspect-[16/9] md:aspect-auto md:min-h-[460px] md:max-h-[82vh] bg-[#0b0b0b] overflow-hidden flex items-center justify-center p-2 sm:p-4 shrink-0 transition-[width,height,min-height,max-height,padding] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+      >
+        <!-- Image Preview (single image or selected gallery image) -->
+        <img
+          id="modal-image"
+          src=""
+          alt="Project Preview"
+          class="w-full h-full max-h-[60vh] md:max-h-[76vh] object-contain"
+        />
 
-      <!-- Video Player (direct MP4/WebM) -->
-      <video
-        id="modal-video"
-        controls
-        playsinline
-        class="hidden w-full h-full object-contain bg-black"
-        src=""
-      ></video>
+        <!-- Video Player (direct MP4/WebM) -->
+        <video
+          id="modal-video"
+          controls
+          playsinline
+          class="hidden w-full h-full object-contain bg-black"
+          src=""
+        ></video>
 
-      <!-- Embedded Video Player (YouTube / Shorts / Vimeo) -->
-      <iframe
-        id="modal-iframe"
-        class="hidden w-full h-full border-0 bg-black"
-        src=""
-        title="Project video player"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      ></iframe>
-    </div>
+        <!-- Embedded Video Player (YouTube / Shorts / Vimeo) -->
+        <iframe
+          id="modal-iframe"
+          class="hidden w-full h-full border-0 bg-black"
+          src=""
+          title="Project video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
 
-    <!-- Modal Content Description -->
-    <div class="p-6 sm:p-8 flex flex-col gap-2 bg-[#1c1c1c]">
-      <span id="modal-category" class="text-xs uppercase font-semibold text-[#fbc000] tracking-wider"></span>
-      <h3 id="modal-title" class="font-body text-2xl sm:text-3xl text-white font-bold tracking-tight"></h3>
-      <p id="modal-desc" class="text-neutral-400 text-sm sm:text-base leading-relaxed mt-2"></p>
+      <!-- Info / Gallery Column (Right column for image/gallery, Bottom for video) -->
+      <div
+        id="modal-info-column"
+        class="w-full md:w-[42%] p-4 sm:p-6 flex flex-col justify-between gap-4 bg-[#161616] md:max-h-[82vh] overflow-y-auto transition-[width,max-height,padding] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+      >
+        <!-- Gallery Bento Box (only shown when type === 'gallery') -->
+        <div
+          id="modal-gallery-bento"
+          class="hidden grid grid-cols-3 grid-flow-dense gap-2 auto-rows-[54px] sm:auto-rows-[64px] mt-8 md:mt-10"
+          aria-label="Project gallery"
+        ></div>
+
+        <!-- Fixed Text Card -->
+        <div id="modal-text-card" class="bg-[#1e1e1e] rounded-xl p-4 sm:p-5 border border-neutral-800/80 flex flex-col gap-1.5 mt-auto">
+          <span id="modal-category" class="text-[11px] sm:text-xs uppercase font-semibold text-[#fbc000] tracking-wider font-montserrat"></span>
+          <h3 id="modal-title" class="font-montserrat text-xl sm:text-2xl text-white font-bold tracking-tight leading-snug"></h3>
+          <p id="modal-desc" class="text-neutral-300 text-xs sm:text-sm leading-relaxed mt-1.5 max-h-[26vh] overflow-y-auto pr-1 font-montserrat"></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
+<style is:global>
+  @keyframes galleryBentoIn {
+    0% {
+      opacity: 0;
+      transform: translateY(16px) scale(0.88);
+      filter: blur(3px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes modalImageSwap {
+    0% {
+      opacity: 0;
+      transform: scale(0.96) translateY(4px);
+      filter: blur(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes modalTextIn {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .gallery-bento-item {
+    animation: galleryBentoIn 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
+    will-change: transform, opacity, filter;
+  }
+
+  .modal-image-animate {
+    animation: modalImageSwap 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+    will-change: transform, opacity, filter;
+  }
+
+  .modal-text-animate {
+    animation: modalTextIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-bento-item,
+    .modal-image-animate,
+    .modal-text-animate {
+      animation: none;
+    }
+  }
+</style>
+
 <script>
-  // Project modal interactions
+  // Project modal interactions (video, single image, and animated gallery bento)
   const modal = document.getElementById('project-modal');
   const modalContainer = document.getElementById('modal-container');
+  const modalLayout = document.getElementById('modal-layout');
+  const modalMediaStage = document.getElementById('modal-media-stage');
+  const modalInfoColumn = document.getElementById('modal-info-column');
+  const modalGalleryBento = document.getElementById('modal-gallery-bento');
+  const modalTextCard = document.getElementById('modal-text-card');
   const closeBtn = document.getElementById('modal-close-btn');
   const modalImg = document.getElementById('modal-image') as HTMLImageElement;
   const modalVideo = document.getElementById('modal-video') as HTMLVideoElement;
@@ -76,6 +161,18 @@
   const modalTitle = document.getElementById('modal-title');
   const modalCategory = document.getElementById('modal-category');
   const modalDesc = document.getElementById('modal-desc');
+
+  // Bento slot pattern for right-side gallery thumbnails
+  const GALLERY_BENTO_SPANS = [
+    'col-span-1 row-span-2',
+    'col-span-1 row-span-1',
+    'col-span-1 row-span-1',
+    'col-span-1 row-span-2',
+    'col-span-1 row-span-2',
+    'col-span-1 row-span-1',
+    'col-span-1 row-span-1',
+    'col-span-1 row-span-1',
+  ];
 
   function getEmbedVideoUrl(rawUrl: string): string | null {
     const url = rawUrl.trim();
@@ -98,6 +195,105 @@
     return null;
   }
 
+  function swapPreviewImage(url: string) {
+    if (!modalImg) return;
+    modalImg.classList.remove('modal-image-animate');
+    void modalImg.offsetWidth; // trigger reflow for smooth transition
+    modalImg.src = url;
+    modalImg.classList.add('modal-image-animate');
+  }
+
+  function applyLayoutMode(mode: 'video' | 'image' | 'gallery') {
+    if (!modalContainer || !modalLayout || !modalMediaStage || !modalInfoColumn || !modalGalleryBento || !modalTextCard) return;
+
+    if (mode === 'video') {
+      modalContainer.classList.remove('max-w-5xl');
+      modalContainer.classList.add('max-w-3xl');
+
+      modalLayout.classList.remove('md:flex-row');
+
+      modalMediaStage.classList.remove('md:w-[58%]', 'md:aspect-auto', 'md:min-h-[460px]', 'md:max-h-[82vh]', 'p-2', 'sm:p-4');
+      modalMediaStage.classList.add('sm:aspect-[16/10]', 'p-0');
+
+      modalInfoColumn.classList.remove('md:w-[42%]', 'md:max-h-[82vh]');
+      modalGalleryBento.classList.add('hidden');
+      modalTextCard.classList.remove('mt-auto');
+    } else {
+      modalContainer.classList.remove('max-w-3xl');
+      modalContainer.classList.add('max-w-5xl');
+
+      modalLayout.classList.add('md:flex-row');
+
+      modalMediaStage.classList.remove('sm:aspect-[16/10]', 'p-0');
+      modalMediaStage.classList.add('md:w-[58%]', 'md:aspect-auto', 'md:min-h-[460px]', 'md:max-h-[82vh]', 'p-2', 'sm:p-4');
+
+      modalInfoColumn.classList.add('md:w-[42%]', 'md:max-h-[82vh]');
+      modalTextCard.classList.add('mt-auto');
+
+      if (mode === 'gallery') {
+        modalGalleryBento.classList.remove('hidden');
+      } else {
+        modalGalleryBento.classList.add('hidden');
+      }
+    }
+  }
+
+  function buildGalleryBento(images: string[]) {
+    if (!modalGalleryBento) return;
+    modalGalleryBento.innerHTML = '';
+
+    images.forEach((src, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      const spanCls = GALLERY_BENTO_SPANS[i % GALLERY_BENTO_SPANS.length];
+      const isSelected = i === 0;
+      btn.className = `gallery-bento-item group relative overflow-hidden rounded-lg border cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:scale-[1.04] hover:border-[#fbc000] hover:shadow-[0_6px_20px_rgba(251,192,0,0.22)] ${spanCls} ${
+        isSelected
+          ? 'is-selected border-[#fbc000] ring-2 ring-[#fbc000] opacity-100 scale-[1.03] shadow-[0_0_16px_rgba(251,192,0,0.32)]'
+          : 'border-neutral-700/80 opacity-70 hover:opacity-100'
+      }`;
+      btn.style.animationDelay = `${i * 60}ms`;
+      btn.setAttribute('aria-label', `Gallery image ${i + 1}`);
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = `Gallery item ${i + 1}`;
+      img.className = 'w-full h-full object-cover pointer-events-none transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110';
+      img.loading = 'lazy';
+      btn.appendChild(img);
+
+      btn.addEventListener('click', () => {
+        modalGalleryBento.querySelectorAll('.gallery-bento-item').forEach((el) => {
+          el.classList.remove(
+            'is-selected',
+            'border-[#fbc000]',
+            'ring-2',
+            'ring-[#fbc000]',
+            'opacity-100',
+            'scale-[1.03]',
+            'shadow-[0_0_16px_rgba(251,192,0,0.32)]'
+          );
+          el.classList.add('border-neutral-700/80', 'opacity-70');
+        });
+
+        btn.classList.remove('border-neutral-700/80', 'opacity-70');
+        btn.classList.add(
+          'is-selected',
+          'border-[#fbc000]',
+          'ring-2',
+          'ring-[#fbc000]',
+          'opacity-100',
+          'scale-[1.03]',
+          'shadow-[0_0_16px_rgba(251,192,0,0.32)]'
+        );
+
+        swapPreviewImage(src);
+      });
+
+      modalGalleryBento.appendChild(btn);
+    });
+  }
+
   function openModal(card: HTMLElement) {
     if (!modal || !modalImg || !modalTitle || !modalCategory || !modalDesc || !modalContainer) return;
 
@@ -106,31 +302,42 @@
     const img = card.getAttribute('data-project-img') || '';
     const desc = card.getAttribute('data-project-desc') || '';
     const video = card.getAttribute('data-project-video') || '';
-    const embedUrl = getEmbedVideoUrl(video);
+    const rawType = (card.getAttribute('data-project-type') || 'image').toLowerCase();
+    let galleryList: string[] = [];
+    try {
+      galleryList = JSON.parse(card.getAttribute('data-project-gallery') || '[]');
+    } catch {
+      galleryList = [];
+    }
 
     modalTitle.textContent = title;
     modalCategory.textContent = category;
     modalDesc.textContent = desc;
 
-    if (embedUrl && modalIframe) {
+    const embedUrl = getEmbedVideoUrl(video);
+    const isVideo = rawType === 'video' || Boolean(video);
+
+    if (isVideo && (embedUrl || video)) {
+      applyLayoutMode('video');
       modalImg.classList.add('hidden');
-      if (modalVideo) {
-        modalVideo.pause();
-        modalVideo.src = '';
-        modalVideo.classList.add('hidden');
-      }
-      modalIframe.src = embedUrl;
-      modalIframe.classList.remove('hidden');
-    } else if (video) {
-      modalImg.classList.add('hidden');
-      if (modalIframe) {
-        modalIframe.src = '';
-        modalIframe.classList.add('hidden');
-      }
-      if (modalVideo) {
-        modalVideo.src = video;
-        modalVideo.classList.remove('hidden');
-        modalVideo.play().catch(() => {});
+      if (embedUrl && modalIframe) {
+        if (modalVideo) {
+          modalVideo.pause();
+          modalVideo.src = '';
+          modalVideo.classList.add('hidden');
+        }
+        modalIframe.src = embedUrl;
+        modalIframe.classList.remove('hidden');
+      } else if (video) {
+        if (modalIframe) {
+          modalIframe.src = '';
+          modalIframe.classList.add('hidden');
+        }
+        if (modalVideo) {
+          modalVideo.src = video;
+          modalVideo.classList.remove('hidden');
+          modalVideo.play().catch(() => {});
+        }
       }
     } else {
       if (modalIframe) {
@@ -142,14 +349,29 @@
         modalVideo.src = '';
         modalVideo.classList.add('hidden');
       }
-      modalImg.src = img;
-      modalImg.classList.remove('hidden');
+
+      const isGallery = rawType === 'gallery' || rawType === 'galery' || galleryList.length > 0;
+      if (isGallery) {
+        const allImages = img && !galleryList.includes(img) ? [img, ...galleryList] : galleryList.length > 0 ? galleryList : [img];
+        applyLayoutMode('gallery');
+        buildGalleryBento(allImages);
+        modalImg.classList.remove('hidden');
+        swapPreviewImage(allImages[0] || img);
+      } else {
+        applyLayoutMode('image');
+        modalImg.classList.remove('hidden');
+        swapPreviewImage(img);
+      }
     }
+
+    modalTextCard?.classList.remove('modal-text-animate');
+    void modalTextCard?.offsetWidth;
+    modalTextCard?.classList.add('modal-text-animate');
 
     modal.classList.remove('opacity-0', 'pointer-events-none');
     modal.classList.add('opacity-100');
-    modalContainer.classList.remove('scale-95');
-    modalContainer.classList.add('scale-100');
+    modalContainer.classList.remove('scale-[0.94]', 'translate-y-3');
+    modalContainer.classList.add('scale-100', 'translate-y-0');
     document.body.style.overflow = 'hidden';
   }
 
@@ -164,10 +386,13 @@
       modalIframe.src = '';
       modalIframe.classList.add('hidden');
     }
+    if (modalGalleryBento) {
+      modalGalleryBento.innerHTML = '';
+    }
     modal.classList.add('opacity-0', 'pointer-events-none');
     modal.classList.remove('opacity-100');
-    modalContainer.classList.add('scale-95');
-    modalContainer.classList.remove('scale-100');
+    modalContainer.classList.add('scale-[0.94]', 'translate-y-3');
+    modalContainer.classList.remove('scale-100', 'translate-y-0');
     document.body.style.overflow = '';
   }
 
@@ -184,6 +409,7 @@
     }
   });
 
+  // Escape key closes modal
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal && !modal.classList.contains('pointer-events-none')) {
       closeModal();

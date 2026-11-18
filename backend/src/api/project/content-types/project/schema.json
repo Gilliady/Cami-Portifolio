@@ -46,6 +46,11 @@
       "type": "integer",
       "default": 0
     },
+    "type": {
+      "type": "enumeration",
+      "enum": ["image", "video", "gallery"],
+      "default": "image"
+    },
     "hasPlay": {
       "type": "boolean",
       "default": false
@@ -74,6 +79,12 @@
       "type": "media",
       "multiple": false,
       "allowedTypes": ["images"]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"],
+      "description": "Multiple gallery images shown inside the project modal bento grid when type is gallery"
     },
     "videoFile": {
       "type": "media",

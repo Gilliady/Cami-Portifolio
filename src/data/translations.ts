@@ -8,12 +8,14 @@ export interface ProjectItem {
   title: string;
   category: string;
   image: string;
+  type?: 'image' | 'video' | 'gallery';
   hasPlay: boolean;
   hasAwards?: boolean;
   filterGroups?: string[];
   cols?: string; // custom desktop grid span
   description?: string;
   videoUrl?: string;
+  gallery?: string[];
 }
 
 export interface ContentData {

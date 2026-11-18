@@ -135,14 +135,34 @@ export async function getPortfolioProjects(locale: 'pt' | 'en' = 'pt'): Promise<
       if (data.inWebdesign) filterGroups.push('webdesign');
       if (data.inGraphicDesign) filterGroups.push('graphic-design');
 
+      const rawGallery = Array.isArray(data.gallery)
+        ? data.gallery
+        : Array.isArray(data.gallery?.data)
+          ? data.gallery.data
+          : [];
+      const galleryUrls = rawGallery
+        .map((mediaItem: any) => getStrapiMediaUrl(mediaItem, ''))
+        .filter(Boolean);
+
+      const resolvedVideoUrl = data.videoUrl || (data.videoFile ? getStrapiMediaUrl(data.videoFile) : undefined);
+      const rawType = String(data.type || '').toLowerCase();
+      const resolvedType: 'image' | 'video' | 'gallery' =
+        rawType === 'gallery' || rawType === 'galery' || (rawType !== 'video' && galleryUrls.length > 0)
+          ? 'gallery'
+          : rawType === 'video' || Boolean(resolvedVideoUrl) || Boolean(data.hasPlay)
+            ? 'video'
+            : 'image';
+
       return {
         id: String(data.documentId || data.id || `proj-${index}`),
         title: data.title,
         category: data.category,
         description: data.description || '',
         image: getStrapiMediaUrl(data.image, defaultContent[locale].projects.items[index]?.image || ''),
-        videoUrl: data.videoUrl || (data.videoFile ? getStrapiMediaUrl(data.videoFile) : undefined),
-        hasPlay: Boolean(data.hasPlay),
+        type: resolvedType,
+        videoUrl: resolvedVideoUrl,
+        gallery: galleryUrls.length > 0 ? galleryUrls : undefined,
+        hasPlay: resolvedType === 'video' || Boolean(data.hasPlay),
         hasAwards: Boolean(data.hasAwards),
         filterGroups: filterGroups.length > 0 ? filterGroups : undefined,
         cols: data.cols || defaultContent[locale].projects.items[index]?.cols,
